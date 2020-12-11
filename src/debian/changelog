@@ -1,0 +1,5 @@
+snander (1.5.1-1) UNRELEASED; urgency=medium
+
+  * Added many new SPI NOR flash. (Closes: #XXXXXX)
+
+ -- McMCC <mcmcc@mail.ru>  Sat, 21 Nov 2020 05:21:12 +0300
