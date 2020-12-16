@@ -14,7 +14,7 @@ LIBUSB_URL="https://download.fastgit.org/libusb/libusb/releases/download/v1.0.22
 LIBUSB_DIR=""
 
 check_mingw(){
-	if [ ! -x $(command -v i686-w64-mingw32-gcc) ] || [ ! -x $(command -v x86_64-w64-mingw32-gcc) ]; then
+	if [ ! -x "$(command -v i686-w64-mingw32-gcc)" ] || [ ! -x "$(command -v x86_64-w64-mingw32-gcc)" ]; then
 		echo 'Error: mingw-w64 is not installed.' >&2
 		exit 1
 	fi
