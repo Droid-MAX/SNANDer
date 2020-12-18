@@ -14,7 +14,7 @@ SNANDer - Spi Nor/nAND programmER (based on CH341A)
 After installing the gcc and necessary tools, building `snander` is as simple as running the included Makefile:
 
 ```
-make
+make -C src/
 ```
 
 After successful compilation, the target executable file will be generated in the current folder.
