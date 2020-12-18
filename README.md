@@ -66,7 +66,7 @@ Get Status Register 1: 0x81
 Get Status Register 2: 0x18
 Using Flash ECC.
 Detected SPI NAND Flash: WINBOND W25N01G, Flash Size: 128 MB
-igor@mcmcc-GL553VE:~/Soft/SNANDer-bin/Linux$
+$
 ```
 
 2. Full erase flash with disable internal ECC check. Without OOB, page size 2112 bytes.
