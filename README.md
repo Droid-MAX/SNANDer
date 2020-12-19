@@ -3,7 +3,7 @@ SNANDer
 
 SNANDer - Spi Nor/nAND programmER (based on CH341A)
 
-![WinChipHead CH341A based programmer](https://raw.github.com/commandtab/ch341eeprom/master/pics/programmer.jpg)
+![WinChipHead CH341A based programmer](https://raw.githubusercontent.com/command-tab/ch341eeprom/master/pics/programmer.jpg)
 
 **Requirements**
 
