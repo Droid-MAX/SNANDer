@@ -35,7 +35,7 @@ SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_s
 $(PKG): $(TARGET)$(EXEC_SUFFIX)
 
 $(TARGET)$(EXEC_SUFFIX): $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -lusb-1.0 -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -lusb-1.0 -o $@ $^
 
 clean: 
 	rm -f $(TARGET)$(EXEC_SUFFIX)
