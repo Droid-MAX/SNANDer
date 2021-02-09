@@ -1,5 +1,5 @@
-snander (1.5.1-1) UNRELEASED; urgency=medium
+snander (1.5.2-1) UNRELEASED; urgency=medium
 
-  * Added many new SPI NOR flash. (Closes: #XXXXXX)
+  * Add support FM FM25S01A.
 
- -- McMCC <mcmcc@mail.ru>  Sat, 21 Nov 2020 05:21:12 +0300
+ -- McMCC <mcmcc@mail.ru>  Tue, 2 Feb 2021 05:21:12 +0300
