@@ -10,6 +10,8 @@ CFLAGS    ?= -std=gnu99 -Wall -O2
 LDFLAGS   ?= -pthread
 WARNERROR ?= no
 
+SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c main.c
+
 ifeq ($(WARNERROR), yes)
 CFLAGS += -Werror
 endif
@@ -34,8 +36,6 @@ CFLAGS += -posix
 CFLAGS += -Dffs=__builtin_ffs
 CFLAGS += -D__USE_MINGW_ANSI_STDIO=1
 endif
-
-SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c main.c
 
 $(PKG): $(TARGET)$(EXEC_SUFFIX)
 
