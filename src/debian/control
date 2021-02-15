@@ -10,5 +10,5 @@ Vcs-Browser: https://github.com/McMCCRU/SNANDer
 Package: snander
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: SNANDer - Spi Nor/nAND programmER (based on CH341A)
+Description: SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH341A)
 
