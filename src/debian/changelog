@@ -1,5 +1,5 @@
-snander (1.5.2-1) UNRELEASED; urgency=medium
+snander (1.6b-1) UNRELEASED; urgency=medium
 
-  * Add support FM FM25S01A.
+  * Add support i2c EEPROM chips.
 
- -- McMCC <mcmcc@mail.ru>  Tue, 2 Feb 2021 05:21:12 +0300
+ -- McMCC <mcmcc@mail.ru>  Sun, 14 Feb 2021 07:13:12 +0800

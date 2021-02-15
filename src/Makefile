@@ -19,8 +19,13 @@ CFLAGS += -I$(LIBS_BASE)/include
 LDFLAGS += -L$(LIBS_BASE)/lib -Wl,-rpath -Wl,$(LIBS_BASE)/lib
 endif
 
-ifeq ($(CONFIG_STATIC),yes)
+ifeq ($(CONFIG_STATIC), yes)
 LDFLAGS += -static
+endif
+
+ifeq ($(I2C_EEPROM_SUPPORT), yes)
+CFLAGS += -DI2C_EEPROM_SUPPORT
+SRCS += ch341a_i2c.c i2c_eeprom.c
 endif
 
 ifeq ($(TARGET_OS), MinGW)
@@ -56,7 +61,7 @@ install-udev-rule:
 
 debian/changelog:
 	#gbp dch --debian-tag='%(version)s' -S -a --ignore-branch -N '$(VERSION)'
-	dch --create -v 1.5.2-1 --package $(PKG)
+	dch --create -v 1.6b-1 --package $(PKG)
 
 deb:
 	dpkg-buildpackage -b -us -uc
