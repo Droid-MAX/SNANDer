@@ -3,7 +3,7 @@ SNANDer
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH341A)
 
-![WinChipHead CH341A based programmer](https://raw.githubusercontent.com/command-tab/ch341eeprom/master/pics/programmer.jpg)
+![WinChipHead CH341A based programmer](https://raw.githubusercontent.com/Droid-MAX/SNANDer/master/photos/programmer.jpg)
 
 **Requirements**
 
