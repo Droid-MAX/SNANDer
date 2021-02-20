@@ -1,5 +1,5 @@
-snander (1.6b-1) UNRELEASED; urgency=medium
+snander (1.6-1) UNRELEASED; urgency=medium
 
-  * Add support i2c EEPROM chips.
+  * Add support Microwire EEPROM(93CXX) chips.
 
- -- McMCC <mcmcc@mail.ru>  Sun, 14 Feb 2021 07:13:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Thu, 18 Feb 2021 22:26:12 +0800

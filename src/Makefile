@@ -8,13 +8,10 @@ PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/bin
 CFLAGS    ?= -std=gnu99 -Wall -O2
 LDFLAGS   ?= -pthread
-WARNERROR ?= no
+
+EEPROM_SUPPORT = yes
 
 SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c main.c
-
-ifeq ($(WARNERROR), yes)
-CFLAGS += -Werror
-endif
 
 ifdef LIBS_BASE
 CFLAGS += -I$(LIBS_BASE)/include
@@ -25,9 +22,9 @@ ifeq ($(CONFIG_STATIC), yes)
 LDFLAGS += -static
 endif
 
-ifeq ($(I2C_EEPROM_SUPPORT), yes)
-CFLAGS += -DI2C_EEPROM_SUPPORT
-SRCS += ch341a_i2c.c i2c_eeprom.c
+ifeq ($(EEPROM_SUPPORT), yes)
+CFLAGS += -DEEPROM_SUPPORT
+SRCS += ch341a_i2c.c i2c_eeprom.c bitbang_microwire.c mw_eeprom.c ch341a_gpio.c
 endif
 
 ifeq ($(TARGET_OS), MinGW)
@@ -60,8 +57,7 @@ install-udev-rule:
 .PHONY: clean install-udev-rule
 
 debian/changelog:
-	#gbp dch --debian-tag='%(version)s' -S -a --ignore-branch -N '$(VERSION)'
-	dch --create -v 1.6b-1 --package $(PKG)
+	dch --create -v 1.6-1 --package $(PKG)
 
 deb:
 	dpkg-buildpackage -b -us -uc

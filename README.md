@@ -11,10 +11,10 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH341A)
 
 **Compiling for Linux**
 
-After installing the gcc and necessary tools, building `snander` is as simple as running the included Makefile:
+After installing the gcc and necessary tools, building `snander` is as simple as running the command:
 
 ```
-make -C src/ I2C_EEPROM_SUPPORT=yes
+make -C src/
 ```
 
 After successful compilation, the target executable file will be generated in the current folder.
@@ -34,7 +34,7 @@ After successful compilation, the target executable file will be generated in th
 Using `snander` is straightforward:
 
 ```
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6b by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
 
   Usage:
  -h             display this message
@@ -43,6 +43,8 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6b by McMCC <mcmcc@mail.ru>
  -L             print list support chips
  -i             read the chip ID info
  -E             select I2C EEPROM {24c01|24c02|24c04|24c08|24c16|24c32|24c64|24c128|24c256|24c512|24c1024}
+                select Microwire EEPROM {93c06|93c16|93c46|93c56|93c66|93c76|93c86|93c96} (need SPI-to-MW adapter)
+ -8             set organization 8-bit for Microwire EEPROM(default 16-bit) and set jumper on SPI-to-MW adapter
  -e             erase chip(full or use with -a [-l])
  -l <bytes>     manually set length
  -a <address>   manually set address
@@ -58,7 +60,7 @@ For example:
 ```
 $ ./SNANDer -i
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6b by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -75,7 +77,7 @@ $
 ```
 $ ./SNANDer -d -e
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6b by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -96,7 +98,7 @@ $
 ```
 $ ./SNANDer -d -v -w ecc_1Gb_2K_64_flashimage_rfb1_ac2600.bin 
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6b by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -326,6 +328,16 @@ I2C EEPROM Support List:
 009. 24c256
 010. 24c512
 011. 24c1024
+
+Microwire EEPROM Support List:
+001. 93c06
+002. 93c16
+003. 93c46
+004. 93c56
+005. 93c66
+006. 93c76
+007. 93c86
+008. 93c96
 ```
 
 **Author**
