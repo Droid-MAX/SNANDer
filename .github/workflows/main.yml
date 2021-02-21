@@ -1,0 +1,63 @@
+# main.yml
+
+# Workflow's name
+name: Build Package for Windows
+
+# Workflow's trigger
+on: [push]
+
+# Workflow's jobs
+jobs:
+  # job's id
+  release:
+    # job's name
+    name: Build and Release Package
+
+    # the type of machine to run the job on
+    runs-on: ubuntu-latest
+
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    # create steps
+    steps:
+      # step1: Check out Git Repository
+      - name: Check out Git Repository
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      # step2: Prepare Compilation Environment
+      - name: Prepare Compilation Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get update
+          sudo -E apt-get install -y pkg-config mingw-w64 tar curl make
+
+      # step3: Build App for Windows
+      - name: Build App for Windows
+        run: |
+          ./build.sh
+
+      # step4: Prepare Artifact
+      - name: Prepare Artifact
+        run: |
+          mkdir -p ./artifact/
+          cp -rf ./build/x86 ./artifact/
+          cp -rf ./build/x64 ./artifact/
+
+      # step5: Deliver Package
+      - name: Deliver Package
+        uses: actions/upload-artifact@v2
+        with:
+          name: SNANDer_Package
+          path: ./artifact/
+
+      # step6: Create Release
+      - name: Create Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.YOURTOKEN }}
+          files: ./artifact/*
+          tag: ${{ github.ref }}
+          file_glob: true
