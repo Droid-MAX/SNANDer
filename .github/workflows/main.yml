@@ -58,6 +58,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
-          files: ./artifact/*
+          file: ./artifact/*
           tag: ${{ github.ref }}
           file_glob: true
