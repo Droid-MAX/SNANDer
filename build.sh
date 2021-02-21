@@ -10,7 +10,7 @@ LIBS_DIR=$BUILD_DIR/libs
 LIBSDIR_X86=$LIBS_DIR/x86
 LIBSDIR_X64=$LIBS_DIR/x64
 
-LIBUSB_URL="https://download.fastgit.org/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2"
+LIBUSB_URL="https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2"
 LIBUSB_DIR=""
 
 check_mingw(){
