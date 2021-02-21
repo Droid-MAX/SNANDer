@@ -48,7 +48,7 @@ prepare_dirs(){
 download_files(){
 	if [ -d $DOWNLOAD_DIR ] && [ ! -d $DOWNLOAD_DIR/libusb-1.0.22 ]; then
 		cd $DOWNLOAD_DIR; \
-		curl --retry 3 -o libusb-1.0.22.tar.bz2 $LIBUSB_URL; \
+		wget $LIBUSB_URL; \
 		tar xf libusb-1.0.22.tar.bz2
 	fi
 	LIBUSB_DIR=$(cd $DOWNLOAD_DIR/libusb-1.0.22 && pwd)

@@ -32,7 +32,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo -E apt-get update
-          sudo -E apt-get install -y pkg-config mingw-w64 tar curl make
+          sudo -E apt-get install -y pkg-config mingw-w64 tar wget make
 
       # step3: Build App for Windows
       - name: Build App for Windows
