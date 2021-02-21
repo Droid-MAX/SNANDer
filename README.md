@@ -7,7 +7,7 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH341A)
 
 **Requirements**
 
-* gcc/mingw-w64, curl, make, and libusb-1.0-dev (via apt Command Line Tools)
+* gcc/mingw-w64, wget, make, and libusb-1.0-dev (via apt Command Line Tools)
 
 **Compiling for Linux**
 
