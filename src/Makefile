@@ -57,7 +57,7 @@ install-udev-rule:
 .PHONY: clean install-udev-rule
 
 debian/changelog:
-	dch --create -v 1.6-1 --package $(PKG)
+	dch --create -v 1.6.2-1 --package $(PKG)
 
 deb:
 	dpkg-buildpackage -b -us -uc

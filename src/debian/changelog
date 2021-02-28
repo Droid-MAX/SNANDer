@@ -1,5 +1,5 @@
-snander (1.6-1) UNRELEASED; urgency=medium
+snander (1.6.2-1) UNRELEASED; urgency=medium
 
-  * Add support Microwire EEPROM(93CXX) chips.
+  * Added correction table address size for Microwire EEPROM.
 
- -- McMCC <mcmcc@mail.ru>  Thu, 18 Feb 2021 22:26:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 28 Feb 2021 20:26:12 +0800

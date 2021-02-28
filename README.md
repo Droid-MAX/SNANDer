@@ -34,7 +34,7 @@ After successful compilation, the target executable file will be generated in th
 Using `snander` is straightforward:
 
 ```
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
   Usage:
  -h             display this message
@@ -45,6 +45,7 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
  -E             select I2C EEPROM {24c01|24c02|24c04|24c08|24c16|24c32|24c64|24c128|24c256|24c512|24c1024}
                 select Microwire EEPROM {93c06|93c16|93c46|93c56|93c66|93c76|93c86|93c96} (need SPI-to-MW adapter)
  -8             set organization 8-bit for Microwire EEPROM(default 16-bit) and set jumper on SPI-to-MW adapter
+ -f <addr len>  set manual address size in bits for Microwire EEPROM(default auto)
  -e             erase chip(full or use with -a [-l])
  -l <bytes>     manually set length
  -a <address>   manually set address
@@ -60,7 +61,7 @@ For example:
 ```
 $ ./SNANDer -i
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -77,7 +78,7 @@ $
 ```
 $ ./SNANDer -d -e
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -98,7 +99,7 @@ $
 ```
 $ ./SNANDer -d -v -w ecc_1Gb_2K_64_flashimage_rfb1_ac2600.bin 
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: Winchiphead (WCH) - CH341A
 Device revision is 3.0.4
@@ -127,7 +128,7 @@ $
 ```
 $ ./SNANDer -E 93c46 -r test.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -136,7 +137,7 @@ SPI NAND Flash Not Detected!
 spi device id: ff ff ff ff ff (ffffffff)
 SPI NOR Flash Not Detected!
 I2C EEPROM Not Detected!
-Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits
+Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 READ:
 Read addr = 0x0000000000000000, len = 0x0000000000000080
 ............................................................
@@ -149,7 +150,7 @@ Status: OK
 ```
 $ ./SNANDer -E 93c46 -w test.bin -v
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.6.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -158,7 +159,7 @@ SPI NAND Flash Not Detected!
 spi device id: ff ff ff ff ff (ffffffff)
 SPI NOR Flash Not Detected!
 I2C EEPROM Not Detected!
-Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits
+Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 WRITE:
 Write addr = 0x0000000000000000, len = 0x0000000000000080
 ............................................................
