@@ -4,14 +4,16 @@ PKG        = $(TARGET)
 CC        ?= gcc
 STRIP     ?= strip
 INSTALL   ?= install
+WINDRES   ?= windres
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/bin
 CFLAGS    ?= -std=gnu99 -Wall -O2
 LDFLAGS   ?= -pthread
+RES       ?= res.bin
 
 EEPROM_SUPPORT = yes
 
-SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c main.c
+SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c timer.c main.c
 
 ifdef LIBS_BASE
 CFLAGS += -I$(LIBS_BASE)/include
@@ -29,6 +31,7 @@ endif
 
 ifeq ($(TARGET_OS), MinGW)
 EXEC_SUFFIX := .exe
+SRCS += $(RES)
 CFLAGS += -posix
 CFLAGS += -Dffs=__builtin_ffs
 CFLAGS += -D__USE_MINGW_ANSI_STDIO=1
@@ -40,7 +43,7 @@ $(TARGET)$(EXEC_SUFFIX): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -lusb-1.0 -o $@
 
 clean: 
-	rm -f $(TARGET)$(EXEC_SUFFIX)
+	rm -f $(TARGET)$(EXEC_SUFFIX) $(RES)
 
 strip: $(TARGET)$(EXEC_SUFFIX)
 	$(STRIP) $(TARGET)$(EXEC_SUFFIX)
@@ -57,8 +60,11 @@ install-udev-rule:
 .PHONY: clean install-udev-rule
 
 debian/changelog:
-	dch --create -v 1.6.2-1 --package $(PKG)
+	dch --create -v 1.7-1 --package $(PKG)
 
 deb:
 	dpkg-buildpackage -b -us -uc
 .PHONY: install debian/changelog deb
+
+$(RES):
+	$(WINDRES) -i snander.rc -o $@
