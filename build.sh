@@ -79,13 +79,13 @@ build_depends_x64(){
 
 build_target_x86(){
 	make -C $SRC_DIR CC=i686-w64-mingw32-gcc STRIP=i686-w64-mingw32-strip WINDRES=i686-w64-mingw32-windres CONFIG_STATIC=yes TARGET_OS=MinGW LIBS_BASE=$LIBSDIR_X86 strip && mv $SRC_DIR/*.exe $BINDIR_X86
-	make -C $SRC_DIR clean
+	make -C $SRC_DIR TARGET_OS=MinGW clean
 	return 0
 }
 
 build_target_x64(){
 	make -C $SRC_DIR CC=x86_64-w64-mingw32-gcc STRIP=x86_64-w64-mingw32-strip WINDRES=x86_64-w64-mingw32-windres CONFIG_STATIC=yes TARGET_OS=MinGW LIBS_BASE=$LIBSDIR_X64 strip && mv $SRC_DIR/*.exe $BINDIR_X64
-	make -C $SRC_DIR clean
+	make -C $SRC_DIR TARGET_OS=MinGW clean
 	return 0
 }
 
