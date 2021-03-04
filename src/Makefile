@@ -42,6 +42,9 @@ $(PKG): $(TARGET)$(EXEC_SUFFIX)
 $(TARGET)$(EXEC_SUFFIX): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -lusb-1.0 -o $@
 
+$(RES):
+	$(WINDRES) -i snander.rc -o $@
+
 clean: 
 	rm -f $(TARGET)$(EXEC_SUFFIX) $(RES)
 
@@ -65,6 +68,3 @@ debian/changelog:
 deb:
 	dpkg-buildpackage -b -us -uc
 .PHONY: install debian/changelog deb
-
-$(RES):
-	$(WINDRES) -i snander.rc -o $@
