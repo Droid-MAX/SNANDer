@@ -1,5 +1,5 @@
-snander (1.7-1) UNRELEASED; urgency=medium
+snander (1.7.1-1) UNRELEASED; urgency=medium
 
-  * New progress status, counter elapsed time and more cosmetic fixes.
+  * Added detect SPI NAND flash if first garbage byte in ID, Add support KIOXIA TC58CVG2S0HRAIJ.
 
- -- McMCC <mcmcc@mail.ru>  Wed, 3 Mar 2021 05:34:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 4 July 2021 19:15:12 +0800
