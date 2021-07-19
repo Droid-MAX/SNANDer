@@ -34,7 +34,7 @@ After successful compilation, the target executable file will be generated in th
 Using `snander` is straightforward:
 
 ```
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
   Usage:
  -h             display this message
@@ -61,7 +61,7 @@ For example:
 ```
 $ ./SNANDer -i
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -78,7 +78,7 @@ $
 ```
 $ ./SNANDer -d -e
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -101,7 +101,7 @@ $
 ```
 $ ./SNANDer -d -v -w ecc_2Gb_2K_64_flashimage_rfb1_ac2600.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -128,7 +128,7 @@ $
 ```
 $ ./SNANDer -E 93c46 -r test.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -147,7 +147,7 @@ Status: OK
 ```
 $ ./SNANDer -E 93c46 -w test.bin -v
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.1 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4

@@ -1,5 +1,5 @@
-snander (1.7.1-1) UNRELEASED; urgency=medium
+snander (1.7.2-1) UNRELEASED; urgency=medium
 
-  * Added detect SPI NAND flash if first garbage byte in ID, Add support KIOXIA TC58CVG2S0HRAIJ.
+  * spi_nand_flash: don't break the loop on erase fail.
 
- -- McMCC <mcmcc@mail.ru>  Sun, 4 July 2021 19:15:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Mon, 19 July 2021 04:20:12 +0800
