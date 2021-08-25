@@ -1,5 +1,6 @@
 snander (1.7.2-1) UNRELEASED; urgency=medium
 
   * spi_nand_flash: don't break the loop on erase fail.
+  * Add support Winbond W25Q16JV(BV) and W25Q16JM SPI Nor Flash.
 
  -- McMCC <mcmcc@mail.ru>  Mon, 19 July 2021 04:20:12 +0800
