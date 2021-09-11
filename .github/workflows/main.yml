@@ -1,20 +1,27 @@
-# main.yml
-
 # Workflow's name
-name: Build Package for Windows
+name: Build Application for Windows
 
 # Workflow's trigger
-on: [push]
+on:
+  push:
+    tags:
+    - '*'
 
 # Workflow's jobs
 jobs:
   # job's id
-  release:
+  publish:
     # job's name
-    name: Build and Release Package
-
+    name: Build and Publish Release
     # the type of machine to run the job on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - artifact_name: ./artifact/x86/snander.exe
+            asset_name: SNANDer-Windows-32bit.exe
+          - artifact_name: ./artifact/x64/snander.exe
+            asset_name: SNANDer-Windows-64bit.exe
 
     if: github.event.repository.owner.id == github.event.sender.id
 
@@ -34,8 +41,8 @@ jobs:
           sudo -E apt-get update
           sudo -E apt-get install -y pkg-config mingw-w64 tar wget make
 
-      # step3: Build App for Windows
-      - name: Build App for Windows
+      # step3: Build App
+      - name: Build App
         run: |
           ./build.sh
 
@@ -50,14 +57,15 @@ jobs:
       - name: Deliver Package
         uses: actions/upload-artifact@v2
         with:
-          name: SNANDer_Package
+          name: SNANDer
           path: ./artifact/
 
-      # step6: Create Release
-      - name: Create Release
+      # step6: Publish Release
+      - name: Publish Release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.YOURTOKEN }}
-          file: ./artifact/*
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
-          file_glob: true
+          overwrite: true

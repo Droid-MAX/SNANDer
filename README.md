@@ -34,7 +34,7 @@ After successful compilation, the target executable file will be generated in th
 Using `snander` is straightforward:
 
 ```
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
   Usage:
  -h             display this message
@@ -61,7 +61,7 @@ For example:
 ```
 $ ./SNANDer -i
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -78,7 +78,7 @@ $
 ```
 $ ./SNANDer -d -e
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -101,7 +101,7 @@ $
 ```
 $ ./SNANDer -d -v -w ecc_2Gb_2K_64_flashimage_rfb1_ac2600.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -128,7 +128,7 @@ $
 ```
 $ ./SNANDer -E 93c46 -r test.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -147,7 +147,7 @@ Status: OK
 ```
 $ ./SNANDer -E 93c46 -w test.bin -v
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.2 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.3 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -329,42 +329,43 @@ SPI NOR Flash Support List:
 077. ZB25VQ32
 078. ZB25VQ64
 079. ZB25VQ128
-080. BY25Q16BS
-081. BY25Q32BS
-082. BY25Q64AS
-083. BY25Q128AS
-084. XT25F32B
+080. BH25D80
+081. BY25Q16BS
+082. BY25Q32BS
+083. BY25Q64AS
+084. BY25Q128AS
 085. XT25F32B
-086. XT25F64B
-087. XT25F128B
-088. PM25LQ016
-089. PM25LQ032
-090. PM25LQ064
-091. PM25LQ128
-092. IC25LP016
-093. IC25LP032
-094. IC25LP064
-095. IC25LP128
-096. FS25Q016
-097. FS25Q032
-098. FS25Q064
-099. FS25Q128
-100. FM25W16
-101. FM25W32
-102. FM25W64
-103. FM25W128
-104. FM25Q16A
-105. FM25Q32A
-106. FM25Q64A
-107. FM25Q128A
-108. PN25F16
-109. PN25F32
-110. PN25F64
-111. PN25F128
-112. P25Q16H
-113. P25Q32H
-114. P25Q64H
-115. P25Q128H
+086. XT25F32B
+087. XT25F64B
+088. XT25F128B
+089. PM25LQ016
+090. PM25LQ032
+091. PM25LQ064
+092. PM25LQ128
+093. IC25LP016
+094. IC25LP032
+095. IC25LP064
+096. IC25LP128
+097. FS25Q016
+098. FS25Q032
+099. FS25Q064
+100. FS25Q128
+101. FM25W16
+102. FM25W32
+103. FM25W64
+104. FM25W128
+105. FM25Q16A
+106. FM25Q32A
+107. FM25Q64A
+108. FM25Q128A
+109. PN25F16
+110. PN25F32
+111. PN25F64
+112. PN25F128
+113. P25Q16H
+114. P25Q32H
+115. P25Q64H
+116. P25Q128H
 
 I2C EEPROM Support List:
 001. 24c01
