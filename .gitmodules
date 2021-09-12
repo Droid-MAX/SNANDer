@@ -1,0 +1,3 @@
+[submodule "SPI_to_MW_Adapter"]
+	path = SPI_to_MW_Adapter
+	url = https://github.com/Droid-MAX/SPI_to_MW_Adapter
