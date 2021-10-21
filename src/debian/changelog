@@ -1,5 +1,6 @@
 snander (1.7.3-1) UNRELEASED; urgency=medium
 
   * Add BH25D80 SPI Nor Flash chip support.
+  * Add new SPI NAND Paragon PN26Q01AWSIUG(1.8V).
 
- -- McMCC <mcmcc@mail.ru>  Mon, 19 July 2021 04:20:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Thu, 21 October 2021 04:20:12 +0800
