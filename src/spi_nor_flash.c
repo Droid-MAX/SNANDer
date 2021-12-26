@@ -385,7 +385,7 @@ static struct chip_info chips_data [] = {
 	{ "ZB25VQ64",		0x5e, 0x40170000, 64 * 1024, 128, 0 },
 	{ "ZB25VQ128",		0x5e, 0x40180000, 64 * 1024, 256, 0 },
 
-	{ "BH25D80",		0x68, 0x40146840, 64 * 1024, 16,  0 },
+	{ "BH25D80",		0x68, 0x40140000, 64 * 1024, 16,  0 },
 	{ "BY25Q16BS",		0x68, 0x40150000, 64 * 1024, 32,  0 },
 	{ "BY25Q32BS",		0x68, 0x40160000, 64 * 1024, 64,  0 },
 	{ "BY25Q64AS",		0x68, 0x40170000, 64 * 1024, 128, 0 },
@@ -565,10 +565,12 @@ int snor_erase(unsigned long offs, unsigned long len)
 
 		offs += spi_chip_info->sector_size;
 		len -= spi_chip_info->sector_size;
-
-		printf("\bErase %ld%% [%lu] of [%lu] bytes      ", 100 * (plen - len) / plen, plen - len, plen);
-		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-		fflush(stdout);
+		if( timer_progress() )
+		{
+			printf("\bErase %ld%% [%lu] of [%lu] bytes      ", 100 * (plen - len) / plen, plen - len, plen);
+			printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+			fflush(stdout);
+		}
 	}
 	printf("Erase 100%% [%lu] of [%lu] bytes      \n", plen - len, plen);
 	timer_end();
@@ -635,7 +637,7 @@ int snor_read(unsigned char *buf, unsigned long from, unsigned long len)
 			}
 			remain_len -= spi_chip_info->sector_size - data_offset;
 			read_addr += spi_chip_info->sector_size - data_offset;
-			if ((read_addr & 0xffff) == 0) {
+			if( timer_progress() ) {
 				printf("\bRead %ld%% [%lu] of [%lu] bytes      ", 100 * (len - remain_len) / len, len - remain_len, len);
 				printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
 				fflush(stdout);
@@ -710,7 +712,7 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 
 		snor_dbg("%s: to:%x page_size:%x ret:%x\n", __func__, to, page_size, rc);
 
-		if ((retlen & 0xffff) == 0) {
+		if( timer_progress() ) {
 			printf("\bWritten %ld%% [%lu] of [%lu] bytes      ", 100 * (plen - len) / plen, plen - len, plen);
 			printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
 			fflush(stdout);

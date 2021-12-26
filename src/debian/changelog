@@ -1,6 +1,6 @@
-snander (1.7.3-1) UNRELEASED; urgency=medium
+snander (1.7.4-1) UNRELEASED; urgency=medium
 
-  * Add BH25D80 SPI Nor Flash chip support.
-  * Add new SPI NAND Paragon PN26Q01AWSIUG(1.8V).
+  * Add new SPI NAND flash GIGADEVICE GD5F1GQ5UE and GD5F1GQ5RE(1.8V).
+  * Update progress bar once per second for SPI flash programming.
 
- -- McMCC <mcmcc@mail.ru>  Thu, 21 October 2021 04:20:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 26 December 2021 04:20:12 +0800
