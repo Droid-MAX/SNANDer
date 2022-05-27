@@ -114,6 +114,7 @@
 #define _SPI_NAND_MANUFACTURER_ID_DS			0xE5
 #define _SPI_NAND_MANUFACTURER_ID_FISON			0x6B
 #define _SPI_NAND_MANUFACTURER_ID_TYM			0x19
+#define _SPI_NAND_MANUFACTURER_ID_XINCUN		0x9C
 
 /* SPI NAND Device ID */
 #define _SPI_NAND_DEVICE_ID_GD5F1GQ4UAYIG	0xF1
@@ -188,6 +189,8 @@
 #define _SPI_NAND_DEVICE_ID_FS35ND01GS1F1	0xB1
 #define _SPI_NAND_DEVICE_ID_FS35ND02GS2F1	0xA2
 #define _SPI_NAND_DEVICE_ID_FS35ND02GD1F1	0xB2
+#define _SPI_NAND_DEVICE_ID_FS35ND02GS3Y2	0xEB
+#define _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2	0xEC
 #define _SPI_NAND_DEVICE_ID_DS35Q2GA		0x72
 #define _SPI_NAND_DEVICE_ID_DS35Q1GA		0x71
 #define _SPI_NAND_DEVICE_ID_CS11G0T0A0AA	0x00
@@ -196,6 +199,7 @@
 #define _SPI_NAND_DEVICE_ID_TYM25D2GA01		0x01
 #define _SPI_NAND_DEVICE_ID_TYM25D2GA02		0x02
 #define _SPI_NAND_DEVICE_ID_TYM25D1GA03		0x03
+#define _SPI_NAND_DEVICE_ID_XCSP1AAWHNT		0x01
 
 /* Others Define */
 #define _SPI_NAND_LEN_ONE_BYTE			(1)
@@ -471,6 +475,17 @@ struct spi_nand_flash_ooblayout ooblayout_fison = {
 struct spi_nand_flash_ooblayout ooblayout_tym = {
 	.oobsize = 12,
 	.oobfree = {{0,3}, {16,3}, {32,3}, {48,3}}
+};
+
+struct spi_nand_flash_ooblayout ooblayout_xincun = {
+	.oobsize = 48,
+	.oobfree = {{16,48}, {116,12}}
+};
+
+/* only use user meta data with ECC protected */
+struct spi_nand_flash_ooblayout ooblayout_foresee = {
+	.oobsize = 64,
+	.oobfree = {{0,64}}
 };
 
 /*****************************[ Notice]******************************/
@@ -1536,6 +1551,35 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 	},
 
 	{
+		ptr_name:				"FORESEE FS35ND02G-S3Y2",
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_FORESEE,
+		dev_id:					_SPI_NAND_DEVICE_ID_FS35ND02GS3Y2,
+		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_SINGLE,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		oob_free_layout:			&ooblayout_foresee,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	{
+		ptr_name:				"FORESEE FS35ND04G-S2Y2",
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_FORESEE,
+		dev_id:					_SPI_NAND_DEVICE_ID_FS35ND04GS2Y2,
+		device_size:				_SPI_NAND_CHIP_SIZE_4GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_SINGLE,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		oob_free_layout:			&ooblayout_foresee,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
 		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
 		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q2GA,
 		ptr_name:				"DS DS35Q2GA",
@@ -1647,6 +1691,21 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
 		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
 		oob_free_layout:			&ooblayout_tym,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	// Xincun
+	{
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_XINCUN,
+		dev_id:					_SPI_NAND_DEVICE_ID_XCSP1AAWHNT,
+		ptr_name:				"XINCUN XCSP1AAWH-NT",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		oob_free_layout:			&ooblayout_xincun,
 		feature:				SPI_NAND_FLASH_FEATURE_NONE,
 	},
 };
@@ -3834,7 +3893,7 @@ static SPI_NAND_FLASH_RTN_T spi_nand_probe( struct SPI_NAND_FLASH_INFO_T *ptr_rt
 
 	if ( rtn_status != SPI_NAND_FLASH_RTN_NO_ERROR )
 	{
-		/* Another protocol for read id  (For example, the GigaDevice SPI NADN chip for Type C */
+		/* Another protocol for read id  (For example, the GigaDevice SPI NAND chip for Type C */
 		_SPI_NAND_SEMAPHORE_LOCK();
 		spi_nand_protocol_read_id_2( ptr_rtn_device_t );
 		_SPI_NAND_SEMAPHORE_UNLOCK();
