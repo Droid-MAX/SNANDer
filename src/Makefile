@@ -1,5 +1,6 @@
 TARGET     = snander
 PKG        = $(TARGET)
+VERSION    = 1.7.5-1
 
 CC        ?= gcc
 STRIP     ?= strip
@@ -63,7 +64,7 @@ install-udev-rule:
 .PHONY: clean install-udev-rule
 
 debian/changelog:
-	dch --create -v 1.7.5-1 --package $(PKG)
+	dch --create -v $(VERSION) --package $(PKG)
 
 deb:
 	dpkg-buildpackage -b -us -uc
