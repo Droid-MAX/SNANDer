@@ -1,6 +1,6 @@
 TARGET     = snander
 PKG        = $(TARGET)
-VERSION    = 1.7.5-1
+VERSION    = 1.7.6-1
 
 CC        ?= gcc
 STRIP     ?= strip
@@ -27,7 +27,7 @@ endif
 
 ifeq ($(EEPROM_SUPPORT), yes)
 CFLAGS += -DEEPROM_SUPPORT
-SRCS += ch341a_i2c.c i2c_eeprom.c bitbang_microwire.c mw_eeprom.c ch341a_gpio.c
+SRCS += ch341a_i2c.c i2c_eeprom.c spi_eeprom.c bitbang_microwire.c mw_eeprom.c ch341a_gpio.c
 endif
 
 ifeq ($(TARGET_OS), MinGW)
