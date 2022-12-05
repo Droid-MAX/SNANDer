@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
 		}
 		else
 			printf("Status: BAD(%d)\n", ret);
-			goto out;
+		goto out;
 	}
 
 	if ((op == 'r') || (op == 'w')) {
@@ -286,8 +286,8 @@ int main(int argc, char* argv[])
 			printf("Error reading file [%s]\n", fname);
 			if (fp)
 				fclose(fp);
-				free(buf);
-				goto out;
+			free(buf);
+			goto out;
 		}
 		if(len == flen)
 			len = wlen;
@@ -304,8 +304,8 @@ int main(int argc, char* argv[])
 		}
 		else
 			printf("Status: BAD(%d)\n", ret);
-			fclose(fp);
-			free(buf);
+		fclose(fp);
+		free(buf);
 	}
 
 very:
@@ -337,9 +337,9 @@ very:
 			}
 			else
 				printf("Status: BAD\n");
-				fclose(fp);
-				free(buf);
-				goto out;
+			fclose(fp);
+			free(buf);
+			goto out;
 		}
 		fp = fopen(fname, "wb");
 		if (!fp) {
