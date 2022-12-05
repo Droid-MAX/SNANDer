@@ -1,8 +1,7 @@
-snander (1.7.6-1) UNRELEASED; urgency=medium
+snander (1.7.7-1) UNRELEASED; urgency=medium
 
-  * Add S25FL016P SPI NOR flash support.
-  * Fix exit value with errors.
-  * Add initial support SPI EEPROM (Not tested).
-  * Update SNAND API, add manual set OOB size with disable internal ECC.
+  * Add 251024 SPI EEPROM support.
+  * Add option to set page size of SPI EEPROM for fast write.
+  * Many fix code.
 
- -- McMCC <mcmcc@mail.ru>  Mon, 5 Dec 2022 12:00:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Mon, 5 Dec 2022 20:00:12 +0800
