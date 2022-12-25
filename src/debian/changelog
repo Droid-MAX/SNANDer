@@ -2,6 +2,7 @@ snander (1.7.7-1) UNRELEASED; urgency=medium
 
   * Add 251024 SPI EEPROM support.
   * Add option to set page size of SPI EEPROM for fast write.
+  * Add S25FL512S SPI NOR support.
   * Many fix code.
 
- -- McMCC <mcmcc@mail.ru>  Mon, 5 Dec 2022 20:00:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 25 Dec 2022 12:30:12 +0800
