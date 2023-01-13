@@ -10,7 +10,8 @@ LIBS_DIR=$BUILD_DIR/libs
 LIBSDIR_X86=$LIBS_DIR/x86
 LIBSDIR_X64=$LIBS_DIR/x64
 
-LIBUSB_URL="https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2"
+LIBUSB_VER="1.0.26"
+LIBUSB_URL="https://github.com/libusb/libusb/releases/download/v${LIBUSB_VER}/libusb-${LIBUSB_VER}.tar.bz2"
 LIBUSB_DIR=""
 
 check_mingw(){
@@ -46,12 +47,12 @@ prepare_dirs(){
 }
 
 download_files(){
-	if [ -d $DOWNLOAD_DIR ] && [ ! -d $DOWNLOAD_DIR/libusb-1.0.22 ]; then
+	if [ -d $DOWNLOAD_DIR ] && [ ! -d $DOWNLOAD_DIR/libusb-$LIBUSB_VER ]; then
 		cd $DOWNLOAD_DIR; \
 		wget $LIBUSB_URL; \
-		tar xf libusb-1.0.22.tar.bz2
+		tar xf libusb-$LIBUSB_VER.tar.bz2
 	fi
-	LIBUSB_DIR=$(cd $DOWNLOAD_DIR/libusb-1.0.22 && pwd)
+	LIBUSB_DIR=$(cd $DOWNLOAD_DIR/libusb-$LIBUSB_VER && pwd)
 	return 0
 }
 

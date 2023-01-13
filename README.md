@@ -34,13 +34,14 @@ After successful compilation, the target executable file will be generated in th
 Using `snander` is straightforward:
 
 ```
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
   Usage:
  -h             display this message
  -d             disable internal ECC(use read and write page size + OOB size)
  -o <bytes>     manual set OOB size with disable internal ECC(default 0)
  -I             ECC ignore errors(for read test only)
+ -k             Skip BAD pages, try to read or write in next page
  -L             print list support chips
  -i             read the chip ID info
  -E             select I2C EEPROM {24c01|24c02|24c04|24c08|24c16|24c32|24c64|24c128|24c256|24c512|24c1024}
@@ -48,7 +49,7 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
                 select SPI EEPROM 25xxx {25010|25020|25040|25080|25160|25320|25640|25128|25256|25512|251024}
  -8             set organization 8-bit for Microwire EEPROM(default 16-bit) and set jumper on SPI-to-MW adapter
  -f <addr len>  set manual address size in bits for Microwire EEPROM(default auto)
- -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not use)
+ -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not usage)
  -e             erase chip(full or use with -a [-l])
  -l <bytes>     manually set length
  -a <address>   manually set address
@@ -64,7 +65,7 @@ For example:
 ```
 $ ./SNANDer -i
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -81,7 +82,7 @@ $
 ```
 $ ./SNANDer -d -e
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -104,7 +105,7 @@ $
 ```
 $ ./SNANDer -d -v -w ecc_2Gb_2K_64_flashimage_rfb1_ac2600.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -131,7 +132,7 @@ $
 ```
 $ ./SNANDer -E 93c46 -r test.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -150,7 +151,7 @@ Status: OK
 ```
 $ ./SNANDer -E 93c46 -w test.bin -v
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc@mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -177,7 +178,7 @@ Status: OK
 ```
 $ ./SNANDer -E 25640 -v -w test.bin
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc_at_mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
@@ -200,7 +201,7 @@ Status: OK
 ```
 $ ./SNANDer -E 25640 -v -w test.bin -s 32
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.7 by McMCC <mcmcc_at_mail.ru>
+SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4

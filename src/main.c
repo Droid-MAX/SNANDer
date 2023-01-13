@@ -48,12 +48,12 @@ extern int org;
 		"                select SPI EEPROM 25xxx {25010|25020|25040|25080|25160|25320|25640|25128|25256|25512|251024}\n" \
 		" -8             set organization 8-bit for Microwire EEPROM(default 16-bit) and set jumper on SPI-to-MW adapter\n" \
 		" -f <addr len>  set manual address size in bits for Microwire EEPROM(default auto)\n" \
-		" -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not use)\n"
+		" -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not usage)\n"
 #else
 #define EHELP	""
 #endif
 
-#define _VER	"1.7.7"
+#define _VER	"1.7.8"
 
 void title(void)
 {
@@ -72,6 +72,7 @@ void usage(void)
 		" -d             disable internal ECC(use read and write page size + OOB size)\n"\
 		" -o <bytes>     manual set OOB size with disable internal ECC(default 0)\n"\
 		" -I             ECC ignore errors(for read test only)\n"\
+		" -k             Skip BAD pages, try to read or write in next page\n"\
 		" -L             print list support chips\n"\
 		" -i             read the chip ID info\n"\
 		"" EHELP ""\
@@ -96,9 +97,9 @@ int main(int argc, char* argv[])
 	title();
 
 #ifdef EEPROM_SUPPORT
-	while ((c = getopt(argc, argv, "diIhveLl:a:w:r:o:s:E:f:8")) != -1)
+	while ((c = getopt(argc, argv, "diIhveLlk:a:w:r:o:s:E:f:8")) != -1)
 #else
-	while ((c = getopt(argc, argv, "diIhveLl:a:w:r:o:s:")) != -1)
+	while ((c = getopt(argc, argv, "diIhveLlk:a:w:r:o:s:")) != -1)
 #endif
 	{
 		switch(c)
@@ -156,6 +157,9 @@ int main(int argc, char* argv[])
 #endif
 			case 'I':
 				ECC_ignore = 1;
+				break;
+			case 'k':
+				Skip_BAD_page = 1;
 				break;
 			case 'd':
 				ECC_fcheck = 0;
@@ -226,7 +230,7 @@ int main(int argc, char* argv[])
 	}
 	if (spage_size) {
 		if (!seepromsize) {
-			printf("Only use for SPI EEPROM!\n\n");
+			printf("Use only for SPI EEPROM!\n\n");
 			goto out;
 		}
 		if (((spage_size % 8) != 0) || (spage_size > (MAX_SEEP_PSIZE / 2))){
