@@ -230,7 +230,7 @@ int main(int argc, char* argv[])
 	}
 	if (spage_size) {
 		if (!seepromsize) {
-			printf("Use only for SPI EEPROM!\n\n");
+			printf("Only use for SPI EEPROM!\n\n");
 			goto out;
 		}
 		if (((spage_size % 8) != 0) || (spage_size > (MAX_SEEP_PSIZE / 2))){
