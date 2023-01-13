@@ -49,7 +49,7 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
                 select SPI EEPROM 25xxx {25010|25020|25040|25080|25160|25320|25640|25128|25256|25512|251024}
  -8             set organization 8-bit for Microwire EEPROM(default 16-bit) and set jumper on SPI-to-MW adapter
  -f <addr len>  set manual address size in bits for Microwire EEPROM(default auto)
- -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not usage)
+ -s <bytes>     set page size from datasheet for fast write SPI EEPROM(default not use)
  -e             erase chip(full or use with -a [-l])
  -l <bytes>     manually set length
  -a <address>   manually set address
