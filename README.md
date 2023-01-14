@@ -39,7 +39,7 @@ After successful compilation, the target executable file will be generated in th
 
 **Compiling for MacOS**
 
-After installing the mingw-w64 and necessary tools, building `snander` is as simple as running the included script:
+After installing the necessary tools, building `snander` is as simple as running the included script:
 
 ```
 ./build-for-darwin.sh
