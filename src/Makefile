@@ -8,17 +8,16 @@ INSTALL   ?= install
 WINDRES   ?= windres
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/bin
-CFLAGS    ?= -std=gnu99 -Wall -O2
+CFLAGS    ?= -std=gnu99 -Wall -O2 -D_FILE_OFFSET_BITS=64
 LDFLAGS   ?= -pthread
 RES       ?= res.bin
 
-BIGFILE_SUPPORT = -D_FILE_OFFSET_BITS=64
 EEPROM_SUPPORT = yes
 
 SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c timer.c main.c
 
 ifdef LIBS_BASE
-CFLAGS += -I$(LIBS_BASE)/include $(BIGFILE_SUPPORT)
+CFLAGS += -I$(LIBS_BASE)/include
 LDFLAGS += -L$(LIBS_BASE)/lib -Wl,-rpath -Wl,$(LIBS_BASE)/lib
 endif
 
