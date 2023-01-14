@@ -44,7 +44,7 @@ jobs:
       # step3: Build App
       - name: Build App
         run: |
-          ./build.sh
+          ./build-for-windows.sh
 
       # step4: Prepare Artifact
       - name: Prepare Artifact

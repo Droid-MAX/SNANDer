@@ -17,14 +17,32 @@ After installing the gcc and necessary tools, building `snander` is as simple as
 make -C src/
 ```
 
-After successful compilation, the target executable file will be generated in the current folder.
+After successful compilation, the target executable file will be generated in `src` folder.
+
+Or you can choose static compile, building `snander` statically is as simple as running the command:
+
+```
+./build-for-linux.sh
+```
+
+After successful compilation, the target executable file will be generated in the `build` folder.
 
 **Compiling for Windows**
 
 After installing the mingw-w64 and necessary tools, building `snander` is as simple as running the included script:
 
 ```
-./build.sh
+./build-for-windows.sh
+```
+
+After successful compilation, the target executable file will be generated in the `build` folder, include x86 and x64 binaries.
+
+**Compiling for MacOS**
+
+After installing the mingw-w64 and necessary tools, building `snander` is as simple as running the included script:
+
+```
+./build-for-darwin.sh
 ```
 
 After successful compilation, the target executable file will be generated in the `build` folder.
