@@ -1,6 +1,7 @@
 snander (1.7.8-1) UNRELEASED; urgency=medium
 
-  * Updated libusb version to v1.0.26.
-  * Added -k option to skip BAD blocks or pages when reading and writing NAND flash.
+  * Update libusb version to v1.0.26.
+  * Add -k option to skip BAD blocks or pages when reading and writing NAND flash.
+  * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
 
- -- McMCC <mcmcc@mail.ru>  Sat, 14 Jan 2023 05:40:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Tue, 31 Jan 2023 23:40:12 +0800
