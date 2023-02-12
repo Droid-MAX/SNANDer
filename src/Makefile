@@ -9,7 +9,7 @@ WINDRES   ?= windres
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/bin
 CFLAGS    ?= -std=gnu99 -Wall -O2 -D_FILE_OFFSET_BITS=64
-LDFLAGS   ?= -pthread
+LDFLAGS   ?= -lpthread
 RES       ?= res.bin
 
 EEPROM_SUPPORT = yes

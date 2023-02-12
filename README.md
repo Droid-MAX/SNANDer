@@ -47,6 +47,17 @@ After installing the necessary tools, building `snander` is as simple as running
 
 After successful compilation, the target executable file will be generated in the `build` folder.
 
+**Compiling for OpenWrt IPK**
+
+First download `OpenWrt SDK` and extract it
+
+```
+    cd /path/to/your/sdk
+    git clone https://github.com/Droid-MAX/SNANDer package/snander
+    make menuconfig # Choose `snander` in section `Utilities`
+    make package/snander/compile V=s
+```
+
 **Usage**
 
 Using `snander` is straightforward:
