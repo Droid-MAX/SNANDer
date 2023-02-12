@@ -49,7 +49,7 @@ $(TARGET)$(EXEC_SUFFIX): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) $(LDFLAGS) -lusb-1.0 -o $@
 
 $(RES):
-	$(WINDRES) -i snander.rc -o $@
+	$(WINDRES) -i $(TARGET).rc -o $@
 
 clean: 
 	rm -f $(TARGET)$(EXEC_SUFFIX) $(RES)
