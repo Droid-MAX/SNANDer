@@ -135,6 +135,8 @@
 #define _SPI_NAND_DEVICE_ID_F50L2G41LB		0x0A
 #define _SPI_NAND_DEVICE_ID_1_W25N01GV		0xAA
 #define _SPI_NAND_DEVICE_ID_2_W25N01GV		0x21
+#define _SPI_NAND_DEVICE_ID_1_W25N01GW		0xBA
+#define _SPI_NAND_DEVICE_ID_2_W25N01GW		0x21
 #define _SPI_NAND_DEVICE_ID_1_W25N02KV		0xAA
 #define _SPI_NAND_DEVICE_ID_2_W25N02KV		0x22
 #define _SPI_NAND_DEVICE_ID_1_W25M02GV		0xAB
@@ -526,7 +528,22 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		mfr_id:					_SPI_NAND_MANUFACTURER_ID_WINBOND,
 		dev_id:					_SPI_NAND_DEVICE_ID_1_W25N01GV,
 		dev_id_2:				_SPI_NAND_DEVICE_ID_2_W25N01GV,
-		ptr_name:				"WINBOND W25N01G",
+		ptr_name:				"WINBOND W25N01GV",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_WINBOND,
+		dev_id:					_SPI_NAND_DEVICE_ID_1_W25N01GW,
+		dev_id_2:				_SPI_NAND_DEVICE_ID_2_W25N01GW,
+		ptr_name:				"WINBOND W25N01GW",
 		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
@@ -556,7 +573,7 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		mfr_id:					_SPI_NAND_MANUFACTURER_ID_WINBOND,
 		dev_id:					_SPI_NAND_DEVICE_ID_1_W25M02GV,
 		dev_id_2:				_SPI_NAND_DEVICE_ID_2_W25M02GV,
-		ptr_name:				"WINBOND W25M02G",
+		ptr_name:				"WINBOND W25M02GV",
 		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
