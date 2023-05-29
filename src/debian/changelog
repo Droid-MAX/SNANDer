@@ -4,8 +4,9 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add -k option to skip BAD blocks or pages when reading and writing NAND flash.
   * Add P25D05H/P25D10H/P25D20H/P25D40H/P25D80H SPI NOR Flash support.
   * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
+  * Add DS DS35M1GA/DS35M2GA SPI NAND Flash support.
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
   * Add WINBOND W25N01GW SPI NAND Flash support.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Sun, 7 May 2023 13:10:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Mon, 29 May 2023 14:00:12 +0800
