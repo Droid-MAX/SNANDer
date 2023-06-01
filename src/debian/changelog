@@ -6,7 +6,8 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
   * Add DS DS35M1GA/DS35M2GA SPI NAND Flash support.
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
+  * Add MXIC MX35LF2G14AC SPI NAND Flash support.
   * Add WINBOND W25N01GW SPI NAND Flash support.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Mon, 29 May 2023 14:00:12 +0800
+ -- McMCC <mcmcc@mail.ru>  Thu, 1 Jun 2023 22:17:12 +0800
