@@ -108,7 +108,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c01
 
 0040  aa 74 82 a0 00 74 81 a1  e0 00 0f 00 06 04 00 00   .t...t.. ........
@@ -132,7 +132,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c02
 
 0040  aa 74 82 a0 00 74 81 a1  e0 00 10 00 06 04 00 00   .t...t.. ........
@@ -152,8 +152,8 @@
                                          "\xaa\xe0\x00\x7e\x00\x00\x00\x00\x69\x0e\x3c\x00\xe4\x00\x18\x00" \
                                          "\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x8c\xe8\x67\x00" \
                                          "\xaa\xdf\xc0\x75\x00"
-/*please see file /wiresharkusbsniffing/sniffed.txt
-  this is the read next packet for 24c02  (one packet)
+/* please see file /wiresharkusbsniffing/sniffed.txt
+   this is the read next packet for 24c02  (one packet)
 
 0040  aa 74 82 a0 80 74 81 a1  e0 00 00 00 10 00 00 00   .t...t.. ........
 0050  00 00 00 00 8c f1 12 00  01 00 00 00 00 00 00 00   ........ ........
@@ -174,7 +174,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c04
 
 0040  aa 74 82 a0 00 74 81 a1  e0 00 11 00 06 04 00 00   .t...t.. ........
@@ -194,8 +194,8 @@
                                          "\xaa\xe0\x00\x7e\x00\x00\x00\x00\x69\x0e\x3c\x00\xde\x00\x16\x00" \
                                          "\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x8c\xe8\x67\x00" \
                                          "\xaa\xdf\xc0\x75\x00"
-/*please see file /wiresharkusbsniffing/sniffed.txt
-  this is the first read next packet for 24c04  (three different packets)
+/* please see file /wiresharkusbsniffing/sniffed.txt
+   this is the first read next packet for 24c04  (three different packets)
 
 0040  aa 74 82 a0 80 74 81 a1  e0 00 00 00 10 00 00 00   .t...t.. ........
 0050  00 00 00 00 8c f1 12 00  01 00 00 00 00 00 00 00   ........ ........
@@ -216,7 +216,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c08
 
 0040  aa 74 82 a0 00 74 81 a1  e0 00 16 00 06 04 00 00   .t...t.. ........
@@ -236,8 +236,8 @@
                                          "\xaa\xe0\x00\x7e\x00\x00\x00\x00\x69\x0e\x3c\x00\x00\x01\x1a\x00" \
                                          "\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x8c\xe8\x67\x00" \
                                          "\xaa\xdf\xc0\x75\x00"
-/*please see file /wiresharkusbsniffing/sniffed.txt
-  this is the first read next packet for 24c08  (seven different packets)
+/* please see file /wiresharkusbsniffing/sniffed.txt
+   this is the first read next packet for 24c08  (seven different packets)
 
 0040  aa 74 82 a0 80 74 81 a1  e0 00 00 00 10 00 00 00   .t...t.. ........
 0050  00 00 00 00 8c f1 12 00  01 00 00 00 00 00 00 00   ........ ........
@@ -258,7 +258,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c16
 
 0040  aa 74 82 a0 00 74 81 a1  e0 00 0e 00 06 04 00 00   .t...t.. ........
@@ -278,8 +278,8 @@
                                          "\xaa\xe0\x00\x7e\x00\x00\x00\x00\x69\x0e\x3c\x00\xfa\x00\x31\x00" \
                                          "\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x8c\xe8\x67\x00" \
                                          "\xaa\xdf\xc0\x75\x00"
-/*please see file /wiresharkusbsniffing/sniffed.txt
-  this is the first read next packet for 24c16  (fifteen different packets)
+/* please see file /wiresharkusbsniffing/sniffed.txt
+   this is the first read next packet for 24c16  (fifteen different packets)
 
 0040  aa 74 82 a0 80 74 81 a1  e0 00 00 00 10 00 00 00   .t...t.. ........
 0050  00 00 00 00 8c f1 12 00  01 00 00 00 00 00 00 00   ........ ........
@@ -300,7 +300,7 @@
                                           "\xaa\xe0\x00\x00\x2a\x88\x41\x7e\x06\x04\x00\x00\x11\x4d\x40\x77" \
                                           "\xe8\xf3\x12\x00\x14\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00" \
                                           "\xaa\xdf\xc0\x75\x00"
-/* please se file /wiresharkusbsniffing/sniffed.txt
+/* please see file /wiresharkusbsniffing/sniffed.txt
    this is the read setup packet for 24c64
 
 0040  aa 74 83 a0 00 00 74 81  a1 e0 00 00 06 04 00 00   .t....t. ........

@@ -47,12 +47,12 @@
 #define OPCODE_FAST_READ		0x0B	/* Fast Read */
 #define OPCODE_DOR			0x3B	/* Dual Output Read */
 #define OPCODE_QOR			0x6B	/* Quad Output Read */
-#define OPCODE_DIOR			0xBB	/* Dual IO High Performance Read */
-#define OPCODE_QIOR			0xEB	/* Quad IO High Performance Read */
+#define OPCODE_DIOR			0xBB	/* Dual IO High-Performance Read */
+#define OPCODE_QIOR			0xEB	/* Quad IO High-Performance Read */
 #define OPCODE_READ_ID			0x90	/* Read Manufacturer and Device ID */
 
-#define OPCODE_P4E			0x20	/* 4KB Parameter Sectore Erase */
-#define OPCODE_P8E			0x40	/* 8KB Parameter Sectore Erase */
+#define OPCODE_P4E			0x20	/* 4KB Parameter Sector Erase */
+#define OPCODE_P8E			0x40	/* 8KB Parameter Sector Erase */
 #define OPCODE_BE			0x60	/* Bulk Erase */
 #define OPCODE_BE1			0xC7	/* Bulk Erase */
 #define OPCODE_QPP			0x32	/* Quad Page Programing */
