@@ -32,14 +32,14 @@ long flash_cmd_init(struct flash_cmd *cmd)
 #ifdef EEPROM_SUPPORT
 	if ((eepromsize <= 0) && (mw_eepromsize <= 0) && (seepromsize <= 0)) {
 #endif
-		if ((flen = snand_init()) > 0) {
-			cmd->flash_erase = snand_erase;
-			cmd->flash_write = snand_write;
-			cmd->flash_read  = snand_read;
-		} else if ((flen = snor_init()) > 0) {
+		if ((flen = snor_init()) > 0) {
 			cmd->flash_erase = snor_erase;
 			cmd->flash_write = snor_write;
 			cmd->flash_read  = snor_read;
+		} else if ((flen = snand_init()) > 0) {
+		  cmd->flash_erase = snand_erase;
+		  cmd->flash_write = snand_write;
+		  cmd->flash_read  = snand_read;
 		}
 #ifdef EEPROM_SUPPORT
 	} else if ((eepromsize > 0) || (mw_eepromsize > 0) || (seepromsize > 0)) {
