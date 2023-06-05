@@ -14,7 +14,7 @@
  * DEPENDENCIES
  *
  * * $History: $
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *======================================================================================
  */
@@ -65,7 +65,7 @@ typedef enum{
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Enable_Manual_Mode( void );
@@ -83,7 +83,7 @@ SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Enable_Manual_Mode( void );
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Write_One_Byte( u8  data );
@@ -105,7 +105,7 @@ SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Write_One_Byte( u8  data );
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Write_NByte( u8 *ptr_data, u32 len, SPI_CONTROLLER_SPEED_T speed );
@@ -126,7 +126,7 @@ SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Write_NByte( u8 *ptr_data, u32 len, SPI_CONT
  *   OUTPUT: ptr_rtn_data  - The ptr_rtn_data variable of this function.
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Read_NByte( u8 *ptr_rtn_data, u32 len, SPI_CONTROLLER_SPEED_T speed );
@@ -144,7 +144,7 @@ SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Read_NByte( u8 *ptr_rtn_data, u32 len, SPI_C
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Chip_Select_Low( void );
@@ -162,7 +162,7 @@ SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Chip_Select_Low( void );
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *------------------------------------------------------------------------------------
  */
 SPI_CONTROLLER_RTN_T SPI_CONTROLLER_Chip_Select_High( void );

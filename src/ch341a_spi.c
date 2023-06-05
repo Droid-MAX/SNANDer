@@ -162,7 +162,7 @@ static int32_t usb_transfer(const char *func, unsigned int writecnt, unsigned in
 	}
 
 	/* Handle all asynchronous packets as long as we have stuff to write or read. The write(s) simply need
-	 * to complete but we need to scheduling reads as long as we are not done. */
+	 * to complete, but we need to schedule reads as long as we are not done. */
 	unsigned int free_idx = 0; /* The IN transfer we expect to be free next. */
 	unsigned int in_idx = 0; /* The IN transfer we expect to be completed next. */
 	unsigned int in_done = 0;
@@ -474,7 +474,7 @@ int ch341a_spi_init(void)
 			goto dealloc_transfers;
 		}
 	}
-	/* We use these helpers but dont fill the actual buffer yet. */
+	/* We use these helpers but don't fill the actual buffer yet. */
 	libusb_fill_bulk_transfer(transfer_out, handle, WRITE_EP, NULL, 0, cb_out, NULL, USB_TIMEOUT);
 	for (i = 0; i < USB_IN_TRANSFERS; i++)
 		libusb_fill_bulk_transfer(transfer_ins[i], handle, READ_EP, NULL, 0, cb_in, NULL, USB_TIMEOUT);

@@ -10,7 +10,7 @@
  *
  * FUNCTIONS
  *      SPI_NAND_Flash_Init             To provide interface for SPI NAND init.
- *      SPI_NAND_Flash_Get_Flash_Info   To get system current flash info.
+ *      SPI_NAND_Flash_Get_Flash_Info   To get the system current flash info.
  *      SPI_NAND_Flash_Write_Nbyte      To provide interface for Write N Bytes into SPI NAND Flash.
  *      SPI_NAND_Flash_Read_NByte       To provide interface for Read N Bytes from SPI NAND Flash.
  *      SPI_NAND_Flash_Erase            To provide interface for Erase SPI NAND Flash.
@@ -20,7 +20,7 @@
  * DEPENDENCIES
  *
  * * $History: $
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *======================================================================================
  */
 
@@ -126,7 +126,7 @@ struct ra_nand_chip {
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -145,7 +145,7 @@ SPI_NAND_FLASH_RTN_T SPI_NAND_Flash_Init( u32   rom_base );
  *   OUTPUT: ptr_rtn_into_t  - A pointer to the structure of the ptr_rtn_into_t variable.
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -169,7 +169,7 @@ SPI_NAND_FLASH_RTN_T SPI_NAND_Flash_Get_Flash_Info( struct SPI_NAND_FLASH_INFO_T
  *   OUTPUT: rtn_len  - The rtn_len variable of this function.
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -198,7 +198,7 @@ SPI_NAND_FLASH_RTN_T SPI_NAND_Flash_Write_Nbyte( u32					dst_addr,
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -224,7 +224,7 @@ u32 SPI_NAND_Flash_Read_NByte( u32					addr,
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -244,7 +244,7 @@ SPI_NAND_FLASH_RTN_T SPI_NAND_Flash_Erase( u32  dst_addr,
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -263,7 +263,7 @@ unsigned char SPI_NAND_Flash_Read_Byte( unsigned long    addr, SPI_NAND_FLASH_RT
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
@@ -283,7 +283,7 @@ unsigned long SPI_NAND_Flash_Read_DWord( unsigned long  addr, SPI_NAND_FLASH_RTN
  *   OUTPUT: None
  * RETURN  : SPI_RTN_NO_ERROR - Successful.   Otherwise - Failed.
  * NOTES   :
- * MODIFICTION HISTORY:
+ * MODIFICATION HISTORY:
  *
  *------------------------------------------------------------------------------------
  */
