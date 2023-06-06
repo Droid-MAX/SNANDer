@@ -98,6 +98,8 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
+spi device id: ff c2 22 c2 22 (c222c222)
+SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
 Get Status Register 1: 0x38
 Get Status Register 2: 0x10
@@ -115,6 +117,8 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
+spi device id: ff c2 22 c2 22 (c222c222)
+SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
 Get Status Register 1: 0x00
 Get Status Register 2: 0x11
@@ -138,6 +142,8 @@ SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
 
 Found programmer device: WinChipHead (WCH) - CH341A
 Device revision is 3.0.4
+spi device id: ff c2 22 c2 22 (c222c222)
+SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
 Get Status Register 1: 0x00
 Get Status Register 2: 0x11
