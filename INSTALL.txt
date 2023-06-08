@@ -1,7 +1,7 @@
 Windows-10 64bit:
 
 1. Insert USB Programmer based on chip CH341A in port USB.
-2. Run zadig-2.4.exe. Select device ID 1a86:5512 and push INSTALL.
+2. Download and Run zadig-2.8.exe. Select device ID 1a86:5512 and push INSTALL.
 3. Use SNANDer.exe in console mode(cmd)...
 
 Linux Ubuntu 64bit:
