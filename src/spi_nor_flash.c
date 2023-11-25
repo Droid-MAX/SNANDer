@@ -345,6 +345,7 @@ static struct chip_info chips_data [] = {
 	{ "GD25Q128CSIG",	0xc8, 0x4018c840, 64 * 1024, 256, 0 },
 	{ "GD25Q256CSIG",	0xc8, 0x4019c840, 64 * 1024, 512, 1 },
 
+	{ "MX25L4005A",		0xc2, 0x2013c220, 64 * 1024, 8,   0 },
 	{ "MX25L8005M",		0xc2, 0x2014c220, 64 * 1024, 16,  0 },
 	{ "MX25L1605D",		0xc2, 0x2015c220, 64 * 1024, 32,  0 },
 	{ "MX25L3205D",		0xc2, 0x2016c220, 64 * 1024, 64,  0 },
@@ -675,7 +676,12 @@ struct chip_info *chip_prob(void)
 		info = &chips_data[i];
 		if (info->id == buf[0]) {
 			if ((info->jedec_id == jedec) || ((info->jedec_id & 0xffff0000) == jedec_strip)) {
-				printf("Detected SPI NOR Flash: %s, Flash Size: %ld MB\n", info->name, (info->sector_size * info->n_sectors) >> 20);
+				long int size = (info->sector_size * info->n_sectors);
+				if ((size >> 10) >= 1024) {
+					printf("Detected SPI NOR Flash:\e[93m %s\e[0m, Flash Size:\e[93m %ld \e[0mMB\n", info->name, size >> 20);
+				} else {
+					printf("Detected SPI NOR Flash:\e[93m %s\e[0m, Flash Size:\e[93m %ld \e[0mKB\n", info->name, size >> 10);
+				}
 				return info;
 			}
 
