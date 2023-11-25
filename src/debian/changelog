@@ -12,7 +12,7 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
   * Add MXIC MX35LF2G14AC SPI NAND Flash support.
   * Add WINBOND W25N01GW SPI NAND Flash support.
-  * Fix print size in KB when size is less than 1MB
+  * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
  -- McMCC <mcmcc@mail.ru>  Sat, 25 Nov 2023 10:07:12 +0800
