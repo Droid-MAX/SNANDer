@@ -6,7 +6,7 @@ BUILD_DIR=$PWD/build
 DOWNLOAD_DIR=$PWD/dl
 LIBS_DIR=$BUILD_DIR/libs
 
-LIBUSB_VER="1.0.26"
+LIBUSB_VER="1.0.27"
 LIBUSB_URL="https://github.com/libusb/libusb/releases/download/v${LIBUSB_VER}/libusb-${LIBUSB_VER}.tar.bz2"
 LIBUSB_DIR=""
 
