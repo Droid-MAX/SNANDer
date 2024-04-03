@@ -411,9 +411,9 @@ int ch341a_spi_init(void)
 		return -1;
 	}
 #if LIBUSB_API_VERSION >= 0x01000106
-	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, 3);
+	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, 0);
 #else
-	libusb_set_debug(NULL, 3); // Enable information, warning and error messages (only).
+	libusb_set_debug(NULL, 0); // No messages ever emitted by the library (default).
 #endif
 	uint16_t vid = devs_ch341a_spi[0].vendor_id;
 	uint16_t pid = devs_ch341a_spi[0].device_id;
