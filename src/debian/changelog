@@ -14,8 +14,9 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
   * Add MXIC MX35LF2G14AC SPI NAND Flash support.
   * Add WINBOND W25N01GW SPI NAND Flash support.
+  * Add XTX XT26G02E SPI NAND Flash support.
   * Fix Warning: dangling pointer to 'tmp' may be used.
   * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Wed, 3 Apr 2024 22:25:31 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 19 May 2024 03:58:31 +0800
