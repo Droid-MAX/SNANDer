@@ -193,6 +193,7 @@
 #define _SPI_NAND_DEVICE_ID_FM25G02C		0x92
 #define _SPI_NAND_DEVICE_ID_XT26G02B		0xF2
 #define _SPI_NAND_DEVICE_ID_XT26G01C		0x11
+#define _SPI_NAND_DEVICE_ID_XT26G02C		0x12
 #define _SPI_NAND_DEVICE_ID_XT26G01A		0xE1
 #define _SPI_NAND_DEVICE_ID_XT26G02A		0xE2
 #define _SPI_NAND_DEVICE_ID_XT26G02E		0x24
@@ -1271,6 +1272,20 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		mfr_id:					_SPI_NAND_MANUFACTURER_ID_XTX,
 		dev_id:					_SPI_NAND_DEVICE_ID_XT26G01C,
 		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		ptr_name:				"XTX XT26G02C",
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_XTX,
+		dev_id:					_SPI_NAND_DEVICE_ID_XT26G02C,
+		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
 		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
@@ -2660,6 +2675,13 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 		}
 	}
 	else if (((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G01C)))
+	{
+		if(((status & 0xF0) >> 4) == 0xF)
+		{
+			rtn_status = SPI_NAND_FLASH_RTN_DETECTED_BAD_BLOCK;
+		}
+	}
+	else if (((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02C)))
 	{
 		if(((status & 0xF0) >> 4) == 0xF)
 		{
