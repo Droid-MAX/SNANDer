@@ -1,9 +1,9 @@
 SNANDer
 ===
 
-SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH341A)
+SNANDer - Serial Nor/nAND/Eeprom programmeR (based on CH347)
 
-![ch341a-nextProgrammer](photos/ch341a-nextProgrammer.jpg)
+![ch347-nextProgrammer](photos/ch347-nextProgrammer.jpg)
 
 **Requirements**
 
@@ -95,9 +95,7 @@ For example:
 $ ./SNANDer -i
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
@@ -114,9 +112,7 @@ $
 $ ./SNANDer -d -e
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
@@ -139,9 +135,7 @@ $
 $ ./SNANDer -d -v -w ecc_2Gb_2K_64_flashimage_rfb1_ac2600.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
 spi_nand_probe: mfr_id = 0xc2, dev_id = 0x22
@@ -168,9 +162,7 @@ $
 $ ./SNANDer -E 93c46 -r test.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 READ:
 Read addr = 0x0000000000000000, len = 0x0000000000000080
@@ -187,9 +179,7 @@ Status: OK
 $ ./SNANDer -E 93c46 -w test.bin -v
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 WRITE:
 Write addr = 0x0000000000000000, len = 0x0000000000000080
@@ -214,9 +204,7 @@ Status: OK
 $ ./SNANDer -E 25640 -v -w test.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 SPI EEPROM chip: 25640, Size: 8192 bytes
 WRITE:
 Written addr = 0x0000000000000000, len = 0x0000000000002000
@@ -237,9 +225,7 @@ Status: OK
 $ ./SNANDer -E 25640 -v -w test.bin -s 32
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
-
-Found programmer device: WinChipHead (WCH) - CH341A
-Device revision is 3.0.4
+Open CH347 device success.
 SPI EEPROM chip: 25640, Size: 8192 bytes
 Setting page size 32B for write.
 WRITE:

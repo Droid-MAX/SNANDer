@@ -1,12 +1,12 @@
 Windows-10 64bit:
 
-1. Insert USB Programmer based on chip CH341A in port USB.
-2. Download and Run zadig-2.8.exe. Select device ID 1a86:5512 and push INSTALL.
+1. Insert USB Programmer based on chip CH347F/T in port USB.
+2. Download and Run CH341PAR.EXE. and push INSTALL.
 3. Use SNANDer.exe in console mode(cmd)...
 
 Linux Ubuntu 64bit:
 
 1. Copy SNANDer in directory /usr/local/bin.
-2. Copy 40-persistent-ch341a.rules in directory /etc/udev/rules.d.
+2. Copy 40-persistent-ch347.rules in directory /etc/udev/rules.d.
 3. Restart udev service as udevadm control --reload-rules.
 4. Use SNANDer in console mode.

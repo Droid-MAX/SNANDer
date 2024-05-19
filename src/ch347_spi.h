@@ -25,11 +25,11 @@
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
 
-int ch341a_spi_init(void);
-int ch341a_spi_shutdown(void);
-int ch341a_spi_send_command(unsigned int writecnt, unsigned int readcnt, const unsigned char *writearr, unsigned char *readarr);
+int ch347_spi_init(void);
+int ch347_spi_shutdown(void);
+int ch347_spi_send_command(unsigned int writecnt, unsigned int readcnt, const unsigned char *writearr, unsigned char *readarr);
 int enable_pins(bool enable);
 int config_stream(unsigned int speed);
 
 #endif /* __CH341_SPI_H__ */
-/* End of [ch341a_spi.h] package */
+/* End of [ch347_spi.h] package */

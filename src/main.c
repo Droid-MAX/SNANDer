@@ -25,14 +25,14 @@
 #include <time.h>
 
 #include "flashcmd_api.h"
-#include "ch341a_spi.h"
+#include "ch347_spi.h"
 #include "spi_nand_flash.h"
 
 struct flash_cmd prog;
 extern unsigned int bsize;
 
 #ifdef EEPROM_SUPPORT
-#include "ch341a_i2c.h"
+#include "ch347_i2c.h"
 #include "bitbang_microwire.h"
 #include "spi_eeprom.h"
 extern struct EEPROM eeprom_info;
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	if (ch341a_spi_init() < 0) {
+	if (ch347_spi_init() < 0) {
 		printf("Programmer device not found!\n\n");
 		return -1;
 	}
@@ -385,9 +385,9 @@ very:
 	}
 
 out:	//exit with errors
-	ch341a_spi_shutdown();
+	ch347_spi_shutdown();
 	return -1;
 okout:	//exit without errors
-	ch341a_spi_shutdown();
+	ch347_spi_shutdown();
 	return 0;
 }

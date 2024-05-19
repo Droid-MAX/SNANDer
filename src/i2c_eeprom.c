@@ -13,8 +13,8 @@
  * GNU General Public License for more details.
  */
 
-#include "ch341a_spi.h"
-#include "ch341a_i2c.h"
+#include "ch347_spi.h"
+#include "ch347_i2c.h"
 #include "timer.h"
 
 extern unsigned int bsize;
@@ -33,7 +33,7 @@ int i2c_eeprom_read(unsigned char *buf, unsigned long from, unsigned long len)
 	memset(ebuf, 0, sizeof(ebuf));
 	pbuf = ebuf;
 
-	if (ch341readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
+	if (ch347readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
 		printf("Couldn't read [%d] bytes from [%s] EEPROM address 0x%08lu\n", (int)len, eepromname, from);
 		return -1;
 	}
@@ -58,14 +58,14 @@ int i2c_eeprom_erase(unsigned long offs, unsigned long len)
 	pbuf = ebuf;
 
 	if (offs || len < eepromsize) {
-		if (ch341readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
+		if (ch347readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
 			printf("Couldn't read [%d] bytes from [%s] EEPROM\n", eepromsize, eepromname);
 			return -1;
 		}
 		memset(pbuf + offs, 0xff, len);
 	}
 
-	if(ch341writeEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
+	if(ch347writeEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
 		printf("Failed to erase [%d] bytes of [%s] EEPROM address 0x%08lu\n", (int)len, eepromname, offs);
 		return -1;
 	}
@@ -88,14 +88,14 @@ int i2c_eeprom_write(unsigned char *buf, unsigned long to, unsigned long len)
 	pbuf = ebuf;
 
 	if (to || len < eepromsize) {
-		if (ch341readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
+		if (ch347readEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
 			printf("Couldn't read [%d] bytes from [%s] EEPROM\n", (int)len, eepromname);
 			return -1;
 		}
 	}
 	memcpy(pbuf + to, buf, len);
 
-	if(ch341writeEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
+	if(ch347writeEEPROM(pbuf, eepromsize, &eeprom_info) < 0) {
 		printf("Failed to write [%d] bytes of [%s] EEPROM address 0x%08lu\n", (int)len, eepromname, to);
 		return -1;
 	}
@@ -108,7 +108,7 @@ int i2c_eeprom_write(unsigned char *buf, unsigned long to, unsigned long len)
 
 long i2c_init(void)
 {
-	if (config_stream(CH341_I2C_STANDARD_SPEED) < 0)
+	if (config_stream(CH347_I2C_STANDARD_SPEED) < 0)
 		return -1;
 
 	if (eepromsize <= 0) {

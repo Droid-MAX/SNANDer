@@ -29,7 +29,7 @@
 
 /* INCLUDE FILE DECLARATIONS --------------------------------------------------------- */
 #include "types.h"
-#include "ch341a_spi.h"
+#include "ch347_spi.h"
 
 /* MACRO DECLARATIONS ---------------------------------------------------------------- */
 #define SPI_NAND_FLASH_OOB_FREE_ENTRY_MAX	32

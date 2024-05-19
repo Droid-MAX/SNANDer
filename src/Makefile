@@ -14,7 +14,7 @@ RES       ?= res.bin
 
 EEPROM_SUPPORT = yes
 
-SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch341a_spi.c timer.c main.c
+SRCS = flashcmd_api.c spi_controller.c spi_nand_flash.c spi_nor_flash.c ch347_spi.c timer.c main.c
 
 ifdef LIBS_BASE
 CFLAGS += -I$(LIBS_BASE)/include
@@ -27,7 +27,7 @@ endif
 
 ifeq ($(EEPROM_SUPPORT), yes)
 CFLAGS += -DEEPROM_SUPPORT
-SRCS += ch341a_i2c.c i2c_eeprom.c spi_eeprom.c bitbang_microwire.c mw_eeprom.c ch341a_gpio.c
+SRCS += i2c_eeprom.c spi_eeprom.c bitbang_microwire.c mw_eeprom.c ch341a_gpio.c ch347_i2c.c
 endif
 
 ifeq ($(TARGET_OS), MinGW)
@@ -61,10 +61,10 @@ install: $(TARGET)
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)/etc/udev/rules.d
 	$(INSTALL) -m 0755 $(TARGET) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0664 40-persistent-ch341a.rules $(DESTDIR)/etc/udev/rules.d/40-persistent-ch341a.rules
+	$(INSTALL) -m 0664 40-persistent-ch347.rules $(DESTDIR)/etc/udev/rules.d/40-persistent-ch347.rules
 
 install-udev-rule:
-	cp 40-persistent-ch341a.rules /etc/udev/rules.d/
+	cp 40-persistent-ch347.rules /etc/udev/rules.d/
 	udevadm control --reload-rules
 .PHONY: clean install-udev-rule
 
