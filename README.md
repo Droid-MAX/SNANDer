@@ -95,6 +95,7 @@ For example:
 $ ./SNANDer -i
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
+
 Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
@@ -112,6 +113,7 @@ $
 $ ./SNANDer -d -e
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
+
 Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
@@ -135,6 +137,7 @@ $
 $ ./SNANDer -d -v -w ecc_2Gb_2K_64_flashimage_rfb1_ac2600.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
+
 Open CH347 device success.
 spi device id: ff c2 22 c2 22 (c222c222)
 SPI NOR Flash Not Detected!
@@ -162,6 +165,7 @@ $
 $ ./SNANDer -E 93c46 -r test.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
+
 Open CH347 device success.
 Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 READ:
@@ -179,6 +183,7 @@ Status: OK
 $ ./SNANDer -E 93c46 -w test.bin -v
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc@mail.ru>
+
 Open CH347 device success.
 Microwire EEPROM chip: 93c46, Size: 64 bytes, Org: 16 bits, fix addr len: Auto
 WRITE:
@@ -204,6 +209,7 @@ Status: OK
 $ ./SNANDer -E 25640 -v -w test.bin
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
+
 Open CH347 device success.
 SPI EEPROM chip: 25640, Size: 8192 bytes
 WRITE:
@@ -225,6 +231,7 @@ Status: OK
 $ ./SNANDer -E 25640 -v -w test.bin -s 32
 
 SNANDer - Serial Nor/nAND/Eeprom programmeR v.1.7.8 by McMCC <mcmcc_at_mail.ru>
+
 Open CH347 device success.
 SPI EEPROM chip: 25640, Size: 8192 bytes
 Setting page size 32B for write.
