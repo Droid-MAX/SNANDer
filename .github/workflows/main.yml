@@ -31,7 +31,7 @@ jobs:
       - name: Check out Git Repository
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: ch347
 
       # step2: Prepare Compilation Environment
       - name: Prepare Compilation Environment
