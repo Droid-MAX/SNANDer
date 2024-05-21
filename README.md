@@ -662,7 +662,7 @@ SPI EEPROM Support List:
 
 **Author**
 
-Originally written by [McMCC](https://github.com/McMCCRU/SNANDer) and released under the terms of the GNU GPL, version 2.0, or later. Modifications by [Droid-MAX](https://github.com/Droid-MAX/) to make it more easier build for Windows.
+Originally written by [McMCC](https://github.com/McMCCRU/SNANDer) and released under the terms of the GNU GPL, version 2.0, or later. Modifications by [Droid-MAX](https://github.com/Droid-MAX/) to make it more easier build for Windows. And [ZhiyuanYuanNJ](https://github.com/ZhiyuanYuanNJ/SNANDer) implemented support for the ch347 programmer.
 
 **License**
 
