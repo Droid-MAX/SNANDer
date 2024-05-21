@@ -108,7 +108,6 @@
 #define _SPI_NAND_MANUFACTURER_ID_ATO_2			0xAD
 #define _SPI_NAND_MANUFACTURER_ID_FM			0xA1
 #define _SPI_NAND_MANUFACTURER_ID_XTX			0x0B
-#define _SPI_NAND_MANUFACTURER_ID_XTX_2			0x2C
 #define _SPI_NAND_MANUFACTURER_ID_MIRA			0xC8
 #define _SPI_NAND_MANUFACTURER_ID_BIWIN			0xBC
 #define _SPI_NAND_MANUFACTURER_ID_FORESEE		0xCD
@@ -196,7 +195,6 @@
 #define _SPI_NAND_DEVICE_ID_XT26G02C		0x12
 #define _SPI_NAND_DEVICE_ID_XT26G01A		0xE1
 #define _SPI_NAND_DEVICE_ID_XT26G02A		0xE2
-#define _SPI_NAND_DEVICE_ID_XT26G02E		0x24
 #define _SPI_NAND_DEVICE_ID_PSU1GS20BN		0x21
 #define _SPI_NAND_DEVICE_ID_BWJX08U		0xB1
 #define _SPI_NAND_DEVICE_ID_BWET08U		0xB2
@@ -1316,20 +1314,6 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
-		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
-		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
-		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
-		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
-		feature:				SPI_NAND_FLASH_FEATURE_NONE,
-	},
-
-	{
-		ptr_name:				"XTX XT26G02E",
-		mfr_id:					_SPI_NAND_MANUFACTURER_ID_XTX_2,
-		dev_id:					_SPI_NAND_DEVICE_ID_XT26G02E,
-		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
-		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
-		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
 		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
 		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
 		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
@@ -2702,13 +2686,6 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 			rtn_status = SPI_NAND_FLASH_RTN_DETECTED_BAD_BLOCK;
 		}
 	}
-	else if (((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02E)))
-	{
-		if(((status & 0x70) >> 4) == 0x7)
-		{
-			rtn_status = SPI_NAND_FLASH_RTN_DETECTED_BAD_BLOCK;
-		}
-	}
 	else if(((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_MIRA) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_PSU1GS20BN)))
 	{
 		if(((status & 0x30) >> 4) == 0x2 )
@@ -3638,7 +3615,8 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 		spi_nand_protocol_set_status_reg_2(feature);
 	}
 	else if(((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02B)) ||
-			((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02A)))
+			((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02A)) ||
+			((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_XTX) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_XT26G02C)))
 	{
 		/* 1. Unlock All block */
 		spi_nand_protocol_get_status_reg_1(&feature);
