@@ -121,7 +121,8 @@ pCH347ReadData CH347ReadData;
 pCH347WriteData CH347WriteData;
 BOOL DevIsOpened = FALSE; /* Whether the device is turned on */
 #endif
-struct libusb_device_handle *devHandle;
+struct libusb_device_handle *devHandle = NULL;
+
 
 /* Number of parallel IN transfers. 32 seems to produce the most stable throughput on Windows. */
 #define USB_IN_TRANSFERS		32
@@ -145,7 +146,6 @@ static const struct dev_entry devs_ch347_spi[] = {
  * data bytes to each 32-byte packet with command + 31 bytes of data... */
 static struct libusb_transfer *transfer_out = NULL;
 static struct libusb_transfer *transfer_ins[USB_IN_TRANSFERS] = {0};
-struct libusb_device_handle *handle = NULL;
 
 enum trans_state {TRANS_ACTIVE = -2, TRANS_ERR = -1, TRANS_IDLE = 0};
 
@@ -193,7 +193,7 @@ static void LIBUSB_CALL cb_in(struct libusb_transfer *transfer)
 
 static int32_t usb_transfer(const char *func, unsigned int writecnt, unsigned int readcnt, const uint8_t *writearr, uint8_t *readarr)
 {
-	if (handle == NULL)
+	if (devHandle == NULL)
 		return -1;
 
 	int state_out = TRANS_IDLE;
@@ -354,8 +354,8 @@ int config_stream(unsigned int speed)
 		/* CS polarity: bit 7 CS2, bit 6 CS1. 0 = active low */
 		[24] = 0
 	};
-	ULONG transferred = sizeof(buff);
 #ifdef _WIN32
+	ULONG transferred = sizeof(buff);
 	if (!CH347WriteData(ugIndex, buff, &transferred)){
 		printf("Could not configure SPI interface\n");
 		return -1;
@@ -366,8 +366,8 @@ int config_stream(unsigned int speed)
 		return -1;
 	}
 	ret = 0;
-#elif defined(_linux_)
-	ret = libusb_bulk_transfer(ch347_data->handle, WRITE_EP, buff, sizeof(buff), NULL, 1000);
+#elif defined(__linux__)
+	ret = libusb_bulk_transfer(devHandle, WRITE_EP, buff, sizeof(buff), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not configure SPI interface\n");
 	}
@@ -375,7 +375,7 @@ int config_stream(unsigned int speed)
 	/* FIXME: Not sure if the CH347 sends error responses for
 	 * invalid config data, if so the code should check
 	 */
-	ret = libusb_bulk_transfer(ch347_data->handle, READ_EP, buff, 4, NULL, 1000);
+	ret = libusb_bulk_transfer(devHandle, READ_EP, buff, 4, NULL, 1000);
 	if (ret < 0 || buff[3] != 0x0) {
 		printf("Could not receive configure SPI command response\n");
 	}
@@ -401,14 +401,14 @@ static int ch347_cs_control(uint8_t cs1, uint8_t cs2)
 		[3] = cs1,
 		[8] = cs2
 	};
-	ULONG transferred = sizeof(cmd);
 #ifdef _WIN32
+	ULONG transferred = sizeof(cmd);
 	if (!CH347WriteData(ugIndex, cmd, &transferred) || transferred != sizeof(cmd)){
 		printf("Could not change CS!\n");
 		return -1;
 	}
 #elif defined(__linux__)
-	int32_t ret = libusb_bulk_transfer(handle, WRITE_EP, cmd, sizeof(cmd), NULL, 1000);
+	int32_t ret = libusb_bulk_transfer(devHandle, WRITE_EP, cmd, sizeof(cmd), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not change CS!\n");
 		return -1;
@@ -431,7 +431,6 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 {
 	unsigned int data_len;
 	int packet_len;
-	ULONG transferred;
 	int ret;
 	uint8_t resp_buf[4] = {0};
 	uint8_t buffer[CH347_PACKET_SIZE] = {0};
@@ -446,6 +445,8 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		buffer[2] = ((data_len) & 0xFF00) >> 8;
 		memcpy(buffer + 3, writearr + bytes_written, data_len);
 #ifdef _WIN32
+	ULONG transferred;
+
 	transferred = packet_len;
 	if (!CH347WriteData(ugIndex, buffer, &transferred) || transferred != packet_len){
 		printf("Could not send write command\n");
@@ -457,12 +458,13 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		return -1;
 	}
 #elif defined(__linux__)
-    ret = libusb_bulk_transfer(handle, WRITE_EP, buffer, packet_len, &transferred, 1000);
+	unsigned long transferred = packet_len;
+    ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
 	if (ret < 0 || transferred != packet_len) {
 		printf("Could not send write command\n");
 		return -1;
 	}
-	ret = libusb_bulk_transfer(handle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
+	ret = libusb_bulk_transfer(devHandle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not receive write command response\n");
 		return -1;
@@ -477,7 +479,6 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 {
 	uint8_t *read_ptr = readarr;
 	int ret;
-	ULONG transferred;
 	unsigned int bytes_read = 0;
 	uint8_t buffer[CH347_PACKET_SIZE] = {0};
 	uint8_t command_buf[7] = {
@@ -490,13 +491,15 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		[6] = (readcnt & 0xFF000000) >> 24
 	};
 #ifdef _WIN32
+	ULONG transferred;
 	transferred = sizeof(command_buf);
 	if (!CH347WriteData(ugIndex, command_buf, &transferred) || transferred != sizeof(command_buf)){
 		printf("Could not send read command\n");
 		return -1;
 	}
-#elif defined(_linux_)
-	ret = libusb_bulk_transfer(ch347_data->handle, WRITE_EP, command_buf, sizeof(command_buf), &transferred, 1000);
+#elif defined(__linux__)
+	unsigned long transferred = sizeof(command_buf);
+	ret = libusb_bulk_transfer(devHandle, WRITE_EP, command_buf, sizeof(command_buf), &transferred, 1000);
 		if (ret < 0 || transferred != sizeof(command_buf)) {
 			printf("Could not send read command\n");
 			return -1;
@@ -509,8 +512,8 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		printf("Could not read data\n");
 		return -1;
 	}
-#elif defined(_linux_)
-	ret = libusb_bulk_transfer(handle, READ_EP, buffer, CH347_PACKET_SIZE, &transferred, 1000);
+#elif defined(__linux__)
+	ret = libusb_bulk_transfer(devHandle, READ_EP, buffer, CH347_PACKET_SIZE, &transferred, 1000);
 	if (ret < 0) {
 		printf("Could not read data\n");
 		return -1;
@@ -566,8 +569,6 @@ int ch347_spi_send_command(unsigned int writecnt, unsigned int readcnt, const un
 
 int ch347_spi_shutdown(void)
 {
-	if (handle == NULL)
-		return -1;
 #ifdef _WIN32
 	if (CH347CloseDevice(ugIndex) == -1){
 	    printf("Close the CH347 failed.\n");
@@ -575,12 +576,13 @@ int ch347_spi_shutdown(void)
 	    DevIsOpened = FALSE;
     }
 #elif defined(__linux__)
-	struct ch347_spi_data *ch347_data = data;
+if (devHandle == NULL)
+		return -1;
     /* TODO: Set this depending on the mode */
 	int spi_interface = MODE_1_IFACE;
-	libusb_release_interface(handle, spi_interface);
-	libusb_attach_kernel_driver(handle, spi_interface);
-	libusb_close(handle);
+	libusb_release_interface(devHandle, spi_interface);
+	libusb_attach_kernel_driver(devHandle, spi_interface);
+	libusb_close(devHandle);
 	libusb_exit(NULL);
 #endif
 	return 0;
@@ -595,7 +597,7 @@ int ch347_spi_init(void)
 	int i = 0;
 #ifdef _WIN32
     if (uhModule == 0) {
-		uhModule = LoadLibrary("CH347DLLA64.DLL");
+		uhModule = LoadLibrary("CH347DLL.DLL");
 		if (uhModule) {
 			CH347OpenDevice = (pCH347OpenDevice)GetProcAddress(
 				uhModule, "CH347OpenDevice");
@@ -643,11 +645,17 @@ int ch347_spi_init(void)
 #else
 	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
 #endif
-	ch347_data->handle = libusb_open_device_with_vid_pid(NULL, vid, pid);
-	devHandle = ch347_data->handle;
-	if (ch347_data->handle == NULL) {
+	i = 0;
+	while (devs_ch347_spi[i].vendor_id != 0) {
+		pid = devs_ch347_spi[i].device_id;
+		devHandle = libusb_open_device_with_vid_pid(NULL, vid, pid);
+		if (devHandle != NULL) {
+			break;
+		}
+		i++;
+	}
+	if (devHandle == NULL) {
 		printf("Couldn't open device %04x:%04x.\n", vid, pid);
-		free(ch347_data);
 		return 1;
 	}
 
@@ -655,19 +663,19 @@ int ch347_spi_init(void)
 	/* Mode 1 uses interface 2 for the SPI interface */
 	int spi_interface = MODE_1_IFACE;
 
-	ret = libusb_detach_kernel_driver(ch347_data->handle, spi_interface);
+	ret = libusb_detach_kernel_driver(devHandle, spi_interface);
 	if (ret != 0 && ret != LIBUSB_ERROR_NOT_FOUND)
-		msg_pwarn("Cannot detach the existing USB driver. Claiming the interface may fail. %s\n",
+		printf("Cannot detach the existing USB driver. Claiming the interface may fail. %s\n",
 			libusb_error_name(ret));
 
-	ret = libusb_claim_interface(ch347_data->handle, spi_interface);
+	ret = libusb_claim_interface(devHandle, spi_interface);
 	if (ret != 0) {
 		printf("Failed to claim interface 2: '%s'\n", libusb_error_name(ret));
 		goto error_exit;
 	}
 
 	struct libusb_device *dev;
-	if (!(dev = libusb_get_device(ch347_data->handle))) {
+	if (!(dev = libusb_get_device(devHandle))) {
 		printf("Failed to get device from device handle.\n");
 		goto error_exit;
 	}
@@ -679,7 +687,7 @@ int ch347_spi_init(void)
 		goto error_exit;
 	}
 
-	msg_pdbg("Device revision is %d.%01d.%01d\n",
+	printf("Device revision is %d.%01d.%01d\n",
 		(desc.bcdDevice >> 8) & 0x00FF,
 		(desc.bcdDevice >> 4) & 0x000F,
 		(desc.bcdDevice >> 0) & 0x000F);

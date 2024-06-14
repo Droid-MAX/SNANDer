@@ -30,6 +30,7 @@
 // #define dprintf(args...) do { if (1) printf(args); } while(0)
 #define true 1
 #define false 0
+typedef int bool;
 extern struct libusb_device_handle *handle;
 unsigned char *readbuf;
 uint32_t getnextpkt; // set by the callback function
@@ -43,6 +44,7 @@ static void cbBulkOut(struct libusb_transfer *transfer);
 extern pCH347ReadData CH347ReadData;
 extern pCH347WriteData CH347WriteData;
 extern ULONG ugIndex;
+#elif defined(__linux__)
 extern struct libusb_device_handle *devHandle;
 #endif
 
@@ -116,7 +118,7 @@ void ch347ReadCmdMarshall(uint8_t *buffer, uint32_t addr, struct EEPROM *eeprom_
 int ch347_i2c_write(struct i2c_msg *msg) {
     unsigned left = msg->len;
     uint8_t *ptr = msg->buf;
-    boolean first = true;
+    bool first = true;
     do {
         uint8_t *outptr = i2c_dev.obuf;
         *outptr++ = mch347_CMD_I2C_STREAM;

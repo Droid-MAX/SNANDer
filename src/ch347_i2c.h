@@ -5,7 +5,7 @@
 #define __CH347_I2C_H__
 
 #include <stdint.h>
-
+#ifdef _WIN32
 typedef int(__stdcall  * pCH347OpenDevice)(unsigned long iIndex);
 
 typedef int(__stdcall * pCH347CloseDevice)(unsigned long iIndex);
@@ -35,6 +35,7 @@ typedef unsigned long(__stdcall * pCH347ReadData)(
 	unsigned long *ioLength);      /* Pointing to the length unit, the input
 					  is the length to be read, and the
 					  return is the actual read length */
+#endif
 
 #define MAX_EEPROM_SIZE			131072 /* For 24c1024*/
 

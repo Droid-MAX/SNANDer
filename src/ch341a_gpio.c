@@ -37,16 +37,16 @@
 
 #define DIR_MASK			0x3F /* D6,D7 - input, D0-D5 - output */
 
-extern struct libusb_device_handle *handle;
+extern struct libusb_device_handle *devHandle;
 
 static int usb_transf(const char *func, uint8_t type, uint8_t *buf, int len)
 {
 	int ret, actuallen = 0;
 
-	if (handle == NULL)
+	if (devHandle == NULL)
 		return -1;
 
-	ret = libusb_bulk_transfer(handle, type, buf, len, &actuallen, DEFAULT_TIMEOUT);
+	ret = libusb_bulk_transfer(devHandle, type, buf, len, &actuallen, DEFAULT_TIMEOUT);
 	if (ret < 0) {
 		printf("%s: Failed to %s %d bytes '%s'\n", func,
 			(type == BULK_WRITE_ENDPOINT) ? "write" : "read", len, strerror(-ret));
