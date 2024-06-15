@@ -597,7 +597,11 @@ int ch347_spi_init(void)
 	int i = 0;
 #ifdef _WIN32
     if (uhModule == 0) {
+#ifdef _WIN64
+		uhModule = LoadLibrary("CH347DLLA64.DLL");
+#else
 		uhModule = LoadLibrary("CH347DLL.DLL");
+#endif
 		if (uhModule) {
 			CH347OpenDevice = (pCH347OpenDevice)GetProcAddress(
 				uhModule, "CH347OpenDevice");
