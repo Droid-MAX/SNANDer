@@ -9,11 +9,11 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add M25P05/M25P10/M25P20/M25P40/M25P80/M25P32/M25P64/N25Q016A/N25Q512A SPI NOR Flash support.
   * Add P25D05H/P25D10H/P25D20H/P25D40H/P25D80H/PY25Q128HA SPI NOR Flash support.
   * Add some SPI NOR Flash from EXCELSEMI/ONSEMI/ZETTA/PCT Manufacturers.
+  * Add MXIC MX35LF2G14AC/MX35UF1GE4AD/MX35UF2GE4AD/MX35UF4GE4AD SPI NAND Flash support.
   * Add GigaDevice GD5F2GQ5UE/GD5F2GQ5RE SPI NAND Flash support.
   * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
   * Add DS DS35M1GA/DS35M2GA SPI NAND Flash support.
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
-  * Add MXIC MX35LF2G14AC SPI NAND Flash support.
   * Add WINBOND W25N01GW SPI NAND Flash support.
   * Add XTX XT26G02C SPI NAND Flash support.
   * Add FM FM25S02A SPI NAND Flash support.
@@ -21,4 +21,4 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Fri, 14 Jun 2024 09:48:31 +0800
+ -- McMCC <mcmcc@mail.ru>  Tue, 18 Jun 2024 15:03:31 +0800
