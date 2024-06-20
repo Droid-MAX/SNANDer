@@ -11,10 +11,10 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add some SPI NOR Flash from EXCELSEMI/ONSEMI/ZETTA/PCT Manufacturers.
   * Add MXIC MX35LF2G14AC/MX35UF1GE4AD/MX35UF2GE4AD/MX35UF4GE4AD SPI NAND Flash support.
   * Add GigaDevice GD5F2GQ5UE/GD5F2GQ5RE SPI NAND Flash support.
+  * Add WINBOND W25N01GW/W25N04KV SPI NAND Flash support.
   * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
   * Add DS DS35M1GA/DS35M2GA SPI NAND Flash support.
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
-  * Add WINBOND W25N01GW SPI NAND Flash support.
   * Add XTX XT26G02C SPI NAND Flash support.
   * Add FM FM25S02A SPI NAND Flash support.
   * Fix Warning: dangling pointer to 'tmp' may be used.
