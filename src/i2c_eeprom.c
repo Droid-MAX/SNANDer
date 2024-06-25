@@ -108,7 +108,7 @@ int i2c_eeprom_write(unsigned char *buf, unsigned long to, unsigned long len)
 
 long i2c_init(void)
 {
-	if (config_stream(CH347_I2C_STANDARD_SPEED) < 0)
+	if (ch347i2cConfig(CH347_I2C_STANDARD_SPEED) < 0)
 		return -1;
 
 	if (eepromsize <= 0) {

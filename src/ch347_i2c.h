@@ -102,7 +102,7 @@ typedef unsigned long(__stdcall * pCH347ReadData)(
 #define	mch347_CMD_I2C_STM_OUT		0x80
 #define	mch347_CMD_I2C_STM_IN		0xC0
 #define	mch347_CMD_I2C_STM_MAX		( min( 0x3F, mch347_PACKET_LENGTH ) )   /* Unused on the source */
-#define	mch347_CMD_I2C_STM_SET		0x60
+#define	mch347_CMD_I2C_STM_SET		0x63
 #define	mch347_CMD_I2C_STM_US		0x40    /* Unused on the source */
 #define	mch347_CMD_I2C_STM_MS		0x50    /* Unused on the source */
 #define	mch347_CMD_I2C_STM_DLY		0x0F    /* Unused on the source */
@@ -415,5 +415,5 @@ struct i2c_msg {
 int32_t ch347readEEPROM(uint8_t *buf, uint32_t bytes, struct EEPROM *eeprom_info);
 int32_t ch347writeEEPROM(uint8_t *buf, uint32_t bytes, struct EEPROM *eeprom_info);
 int32_t parseEEPsize(char *eepromname, struct EEPROM *eeprom);
-
+int32_t ch347i2cConfig(int speed);
 #endif /* __CH347_I2C_H__ */

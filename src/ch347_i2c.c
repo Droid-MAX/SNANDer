@@ -47,11 +47,63 @@ extern ULONG ugIndex;
 #elif defined(__linux__)
 extern struct libusb_device_handle *devHandle;
 #endif
+extern bool isCH347F;
 
 struct xxx {
   uint8_t ibuf[512];
   uint8_t obuf[512];
 } i2c_dev;
+
+int32_t ch347i2cConfig(int speed)
+{
+    int32_t actuallen = 0;
+    int ret;
+    if (isCH347F) {
+        uint8_t i2c_switch_cmd[11] = {0xe2, 0x08, 0x00, 0x00, 0x00, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00};
+        #ifdef _WIN32
+        actuallen =11;
+        if (!CH347WriteData(ugIndex, i2c_switch_cmd, &actuallen)){
+            fprintf(stderr, "USB write error\r\n");
+            return -1;
+        }
+        actuallen = 4;
+        if (!CH347ReadData(ugIndex, i2c_switch_cmd, &actuallen) || actuallen != 4){
+            fprintf(stderr, "USB read error\r\n");
+            return -1;
+        }    
+        #elif defined(__linux__)
+        ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_switch_cmd, 11, &actuallen, DEFAULT_TIMEOUT);
+        if (ret < 0) {
+        fprintf(stderr, "ch347setstream(): Failed write %d bytes '%s'\n", 2, strerror(-ret));
+        return -1;
+        }
+        ret = libusb_bulk_transfer(devHandle, BULK_READ_ENDPOINT, i2c_dev.ibuf, 4, &actuallen, DEFAULT_TIMEOUT);
+        if (ret < 0 || actuallen != 4) {
+            fprintf(stderr, "ch347setstream(): Failed read %d bytes '%s'\n", 2, strerror(-ret));
+            return -1;
+        }
+        #endif
+    }
+    
+    actuallen = 0;
+    i2c_dev.obuf[0] = mch347_CMD_I2C_STREAM;
+    i2c_dev.obuf[1] = mch347_CMD_I2C_STM_SET;
+    i2c_dev.obuf[2] = speed;
+    #ifdef _WIN32
+    actuallen = 3;
+    if (!CH347WriteData(ugIndex, i2c_dev.obuf, &actuallen)){
+        fprintf(stderr, "USB write error\r\n");
+        return -1;
+    }
+    #elif defined(__linux__)
+    ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_dev.obuf, 3, &actuallen, DEFAULT_TIMEOUT);
+    if (ret < 0) {
+        fprintf(stderr, "ch347setstream(): Failed write %d bytes '%s'\n", 2, strerror(-ret));
+        return -1;
+    }
+    #endif
+    return 0;
+}
 
 void ch347ReadCmdMarshall(uint8_t *buffer, uint32_t addr, struct EEPROM *eeprom_info)
 {

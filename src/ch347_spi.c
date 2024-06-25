@@ -80,9 +80,32 @@ static const struct device_speeds spispeeds[] = {
 	{"468.75",	0x7},
 	{NULL,		0x0}
 };
-
+bool isCH347F = false;
 #ifdef _WIN32
 #include <windows.h>
+// 设备信息
+typedef struct _DEV_INFOR {
+    UCHAR iIndex;                // 当前打开序号
+    UCHAR DevicePath[MAX_PATH];  // 设备链接名,用于CreateFile
+    UCHAR UsbClass;              // 驱动类别 0:CH347_USB_CH341, 2:CH347_USB_HID,3:CH347_USB_VCP
+    UCHAR FuncType;              // 功能类别 0:CH347_FUNC_UART,1:CH347_FUNC_SPI_I2C,2:CH347_FUNC_JTAG_I2C
+    CHAR DeviceID[64];           // USB\VID_xxxx&PID_xxxx
+    UCHAR ChipMode;              // 芯片工作模式,0:Mode0(UART0/1); 1:Mode1(Uart1+SPI+I2C); 2:Mode2(HID Uart1+SPI+I2C) 3:Mode3(Uart1+Jtag+IIC) 4:CH347F(Uart*2+Jtag/SPI/IIC)
+    HANDLE DevHandle;            // 设备句柄
+    USHORT BulkOutEndpMaxSize;   // 批量上传端点大小
+    USHORT BulkInEndpMaxSize;    // 批量下传端点大小
+    UCHAR UsbSpeedType;          // USB速度类型，0:FS,1:HS,2:SS
+    UCHAR CH347IfNum;            // USB接口号: CH347T: IF0:UART;   IF1:SPI/IIC/JTAG/GPIO
+                                 //            CH347F: IF0:UART0;  IF1:UART1; IF 2:SPI/IIC/JTAG/GPIO
+    UCHAR DataUpEndp;            // 批量上传端点地址
+    UCHAR DataDnEndp;            // 批量下传端点地址
+    CHAR ProductString[64];      // USB产品字符串
+    CHAR ManufacturerString[64]; // USB厂商字符串
+    ULONG WriteTimeout;          // USB写超时
+    ULONG ReadTimeout;           // USB读超时
+    CHAR FuncDescStr[64];        // 接口功能描述符
+    UCHAR FirewareVer;           // 固件版本,十六进制值
+} mDeviceInforS, *mPDeviceInforS;
 typedef int(__stdcall  * pCH347OpenDevice)(unsigned long iIndex);
 
 typedef int(__stdcall * pCH347CloseDevice)(unsigned long iIndex);
@@ -112,6 +135,7 @@ typedef unsigned long(__stdcall * pCH347ReadData)(
 	unsigned long *ioLength);      /* Pointing to the length unit, the input
 					  is the length to be read, and the
 					  return is the actual read length */
+typedef unsigned long(__stdcall  * pCH347GetDeviceInfor)(unsigned long iIndex, mDeviceInforS *DevInformation);
 HMODULE uhModule = 0;
 ULONG ugIndex = -1;
 pCH347OpenDevice CH347OpenDevice;
@@ -119,6 +143,7 @@ pCH347CloseDevice CH347CloseDevice;
 pCH347SetTimeout CH347SetTimeout;
 pCH347ReadData CH347ReadData;
 pCH347WriteData CH347WriteData;
+pCH347GetDeviceInfor CH347GetDeviceInfor;
 BOOL DevIsOpened = FALSE; /* Whether the device is turned on */
 #endif
 struct libusb_device_handle *devHandle = NULL;
@@ -613,9 +638,11 @@ int ch347_spi_init(void)
 				uhModule, "CH347WriteData");
 			CH347SetTimeout = (pCH347SetTimeout)GetProcAddress(
 				uhModule, "CH347SetTimeout");
+			CH347GetDeviceInfor = (pCH347GetDeviceInfor)GetProcAddress(
+				uhModule, "CH347GetDeviceInfor");
 			if (CH347OpenDevice == NULL || CH347CloseDevice == NULL
 			    || CH347SetTimeout == NULL || CH347ReadData == NULL
-			    || CH347WriteData == NULL) {
+			    || CH347WriteData == NULL || CH347GetDeviceInfor == NULL) {
 				printf("ch347_spi_init error\n");
 				return -1;
 			}
@@ -636,6 +663,17 @@ int ch347_spi_init(void)
         DevIsOpened = TRUE;
 		printf("Open CH347 device success.\n");
     }
+	mDeviceInforS devInfo;
+	CH347GetDeviceInfor(ugIndex, &devInfo);
+	char* pidstr = strstr(devInfo.DeviceID, "PID_");
+	if (pidstr){
+		pidstr += 4;
+	}
+	if (strncmp("55DE", pidstr, 4) == 0){
+		isCH347F = true;
+	}else{
+		isCH347F = false;
+	}
 #elif defined(__linux__)
 	int32_t ret = libusb_init(NULL);
 	if (ret < 0) {
@@ -674,7 +712,7 @@ int ch347_spi_init(void)
 
 	ret = libusb_claim_interface(devHandle, spi_interface);
 	if (ret != 0) {
-		printf("Failed to claim interface 2: '%s'\n", libusb_error_name(ret));
+		printf("Failed to claim interface %d: '%s'\n", MODE_1_IFACE, libusb_error_name(ret));
 		goto error_exit;
 	}
 
@@ -690,7 +728,11 @@ int ch347_spi_init(void)
 		printf("Failed to get device descriptor: '%s'\n", libusb_error_name(ret));
 		goto error_exit;
 	}
-
+	if (pid == CH347F_PID){
+		isCH347F = true;
+	}else{
+		isCH347F = false;
+	}
 	printf("Device revision is %d.%01d.%01d\n",
 		(desc.bcdDevice >> 8) & 0x00FF,
 		(desc.bcdDevice >> 4) & 0x000F,
