@@ -698,7 +698,7 @@ int ch347_spi_init(void)
 	}
 	if (devHandle == NULL) {
 		printf("Couldn't open device %04x:%04x.\n", vid, pid);
-		return 1;
+		return -1;
 	}
 
 	/* TODO: set based on mode */
