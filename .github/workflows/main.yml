@@ -55,7 +55,7 @@ jobs:
 
       # step5: Deliver Package
       - name: Deliver Package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: SNANDer
           path: ./artifact/
