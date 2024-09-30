@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: windows-latest
+        version: [i686, amd64]
         include:
           - artifact_name: ./artifact/x86/snander.exe
             asset_name: SNANDer-Windows-32bit.exe
@@ -57,7 +59,7 @@ jobs:
       - name: Deliver Package
         uses: actions/upload-artifact@v4
         with:
-          name: SNANDer
+          name: SNANDer-${{ matrix.os }}-${{ matrix.version }}
           path: ./artifact/
 
       # step6: Publish Release
