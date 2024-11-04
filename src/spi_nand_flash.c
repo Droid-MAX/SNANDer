@@ -132,6 +132,8 @@
 #define _SPI_NAND_DEVICE_ID_GD5F1GQ5REYIG	0x41
 #define _SPI_NAND_DEVICE_ID_GD5F2GQ5UEYIG	0x52
 #define _SPI_NAND_DEVICE_ID_GD5F2GQ5REYIG	0x42
+#define _SPI_NAND_DEVICE_ID_GD5F1GM7UEYIG	0x91
+#define _SPI_NAND_DEVICE_ID_GD5F1GM7REYIG	0x81
 #define _SPI_NAND_DEVICE_ID_GD5F2GM7UEYIG	0x92
 #define _SPI_NAND_DEVICE_ID_GD5F2GM7REYIG	0x82
 #define _SPI_NAND_DEVICE_ID_F50D1G41LB		0x11
@@ -452,6 +454,34 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		dev_id:					_SPI_NAND_DEVICE_ID_GD5F2GQ5REYIG,
 		ptr_name:				"GIGADEVICE GD5F2GQ5RE",
 		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_GIGADEVICE,
+		dev_id:					_SPI_NAND_DEVICE_ID_GD5F1GM7UEYIG,
+		ptr_name:				"GIGADEVICE GD5F1GM7UE",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_GIGADEVICE,
+		dev_id:					_SPI_NAND_DEVICE_ID_GD5F1GM7REYIG,
+		ptr_name:				"GIGADEVICE GD5F1GM7RE",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
 		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
@@ -2846,6 +2876,8 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F4GQ4UCYIG) ||
 		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5UEYIG) ||
 		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5REYIG) ||
+		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7UEYIG) ||
+		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7REYIG) ||
 		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7UEYIG) ||
 		 (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7REYIG)))
 	{
@@ -2860,6 +2892,8 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F4GQ4UBYIG) ||
 			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5UEYIG) ||
 			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5REYIG) ||
+			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7UEYIG) ||
+			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7REYIG) ||
 			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7UEYIG) ||
 			(ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7REYIG))
 		{
@@ -3689,6 +3723,8 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F4GQ4UCYIG)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5UEYIG)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GQ5REYIG)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7UEYIG)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F1GM7REYIG)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7UEYIG)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_GIGADEVICE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_GD5F2GM7REYIG)))
 	{
