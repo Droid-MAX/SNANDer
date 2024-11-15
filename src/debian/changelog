@@ -2,6 +2,7 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
 
   * Update libusb version to v1.0.27.
   * Add GD25F256F SPI NOR Flash support.
+  * Add GD25LQ128D SPI NOR Flash support.
   * Add DQ25Q128AL SPI NOR Flash support.
   * Add W25Q64JVIM/W25Q64JWIM SPI NOR Flash support.
   * Add MX25L4005A SPI NOR Flash support.
@@ -27,4 +28,4 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Fri, 15 Nov 2024 01:03:32 +0800
+ -- McMCC <mcmcc@mail.ru>  Fri, 15 Nov 2024 15:46:12 +0800
