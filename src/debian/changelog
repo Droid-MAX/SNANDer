@@ -2,7 +2,7 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
 
   * Update libusb version to v1.0.27.
   * Add GD25F256F SPI NOR Flash support.
-  * Add GD25LQ128D SPI NOR Flash support.
+  * Add GD25LQ64E/GD25LQ128D SPI NOR Flash support.
   * Add DQ25Q128AL SPI NOR Flash support.
   * Add W25Q64JVIM/W25Q64JWIM SPI NOR Flash support.
   * Add MX25L4005A SPI NOR Flash support.
