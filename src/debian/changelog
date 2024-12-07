@@ -16,7 +16,7 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add MXIC MX35UF1G14AC/MX35UF2G14AC SPI NAND Flash support.
   * Add GigaDevice GD5F1GQ4RE/GD5F2GQ5UE/GD5F2GQ5RE/GD5F2GQ4UA SPI NAND Flash support.
   * Add GigaDevice GD5F1GM7UE/GD5F1GM7RE/GD5F2GM7UE/GD5F2GM7RE SPI NAND Flash support.
-  * Add HEYANG HYF2GQ4UTACAE SPI NAND Flash support.
+  * Add HEYANG HYF1GQ4UTACAE/HYF2GQ4UTACAE SPI NAND Flash support.
   * Add MICRON MT29F1G01AA/MT29F2G01AA/MT29F4G01AA/MT29F2G01ABA/MT29F2G01ABB SPI NAND Flash support.
   * Add WINBOND W25N01GW/W25N04KV SPI NAND Flash support.
   * Add FORESEE FS35ND01GS1Y2 SPI NAND Flash support.
@@ -28,4 +28,4 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Sat, 16 Nov 2024 17:35:06 +0800
+ -- McMCC <mcmcc@mail.ru>  Sat, 7 Dec 2024 14:18:12 +0800
