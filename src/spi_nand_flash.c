@@ -150,6 +150,8 @@
 #define _SPI_NAND_DEVICE_ID_2_W25N02KV		0x22
 #define _SPI_NAND_DEVICE_ID_1_W25N04KV		0xAA
 #define _SPI_NAND_DEVICE_ID_2_W25N04KV		0x23
+#define _SPI_NAND_DEVICE_ID_1_W25N04KW		0xBA
+#define _SPI_NAND_DEVICE_ID_2_W25N04KW		0x23
 #define _SPI_NAND_DEVICE_ID_1_W25M02GV		0xAB
 #define _SPI_NAND_DEVICE_ID_2_W25M02GV		0x21
 #define _SPI_NAND_DEVICE_ID_MX35LF1GE4AB	0x12
@@ -233,6 +235,8 @@
 #define _SPI_NAND_DEVICE_ID_PSU1GS20BN		0x21
 #define _SPI_NAND_DEVICE_ID_BWJX08U		0xB1
 #define _SPI_NAND_DEVICE_ID_BWET08U		0xB2
+#define _SPI_NAND_DEVICE_ID_F35UQA512M		0x60
+#define _SPI_NAND_DEVICE_ID_F35UQA001G		0x61
 #define _SPI_NAND_DEVICE_ID_FS35ND01GD1F1	0xA1
 #define _SPI_NAND_DEVICE_ID_FS35ND01GS1F1	0xB1
 #define _SPI_NAND_DEVICE_ID_FS35ND02GS2F1	0xA2
@@ -240,10 +244,12 @@
 #define _SPI_NAND_DEVICE_ID_FS35ND01GS1Y2	0xEA
 #define _SPI_NAND_DEVICE_ID_FS35ND02GS3Y2	0xEB
 #define _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2	0xEC
-#define _SPI_NAND_DEVICE_ID_DS35Q2GA		0x72
-#define _SPI_NAND_DEVICE_ID_DS35M2GA		0x22
 #define _SPI_NAND_DEVICE_ID_DS35Q1GA		0x71
 #define _SPI_NAND_DEVICE_ID_DS35M1GA		0x21
+#define _SPI_NAND_DEVICE_ID_DS35Q2GA		0x72
+#define _SPI_NAND_DEVICE_ID_DS35M2GA		0x22
+#define _SPI_NAND_DEVICE_ID_DS35Q2GB		0xF2
+#define _SPI_NAND_DEVICE_ID_DS35M2GB		0xA2
 #define _SPI_NAND_DEVICE_ID_CS11G0T0A0AA	0x00
 #define _SPI_NAND_DEVICE_ID_CS11G1T0A0AA	0x01
 #define _SPI_NAND_DEVICE_ID_CS11G0G0A0AA	0x10
@@ -726,6 +732,21 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		dev_id:					_SPI_NAND_DEVICE_ID_1_W25N04KV,
 		dev_id_2:				_SPI_NAND_DEVICE_ID_2_W25N04KV,
 		ptr_name:				"WINBOND W25N04KV",
+		device_size:				_SPI_NAND_CHIP_SIZE_4GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_WINBOND,
+		dev_id:					_SPI_NAND_DEVICE_ID_1_W25N04KW,
+		dev_id_2:				_SPI_NAND_DEVICE_ID_2_W25N04KW,
+		ptr_name:				"WINBOND W25N04KW",
 		device_size:				_SPI_NAND_CHIP_SIZE_4GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
 		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
@@ -1761,6 +1782,34 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 
 	/* FORESEE */
 	{
+		ptr_name:				"FORESEE F35UQA512M",
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_FORESEE,
+		dev_id:					_SPI_NAND_DEVICE_ID_F35UQA512M,
+		device_size:				_SPI_NAND_CHIP_SIZE_512MBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
+		ptr_name:				"FORESEE F35UQA001G",
+		mfr_id:					_SPI_NAND_MANUFACTURER_ID_FORESEE,
+		dev_id:					_SPI_NAND_DEVICE_ID_F35UQA001G,
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size:				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+
+	{
 		ptr_name:				"FORESEE FS35ND01GD1F1",
 		mfr_id:					_SPI_NAND_MANUFACTURER_ID_FORESEE,
 		dev_id:					_SPI_NAND_DEVICE_ID_FS35ND01GD1F1,
@@ -1859,6 +1908,32 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 
 	{
 		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
+		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q1GA,
+		ptr_name:				"DS DS35Q1GA",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	{
+		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
+		dev_id: 				_SPI_NAND_DEVICE_ID_DS35M1GA,
+		ptr_name:				"DS DS35M1GA",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	{
+		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
 		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q2GA,
 		ptr_name:				"DS DS35Q2GA",
 		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
@@ -1885,29 +1960,29 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 	},
 	{
 		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
-		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q1GA,
-		ptr_name:				"DS DS35Q1GA",
-		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q2GB,
+		ptr_name:				"DS DS35Q2GB",
+		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
-		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
 		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
 		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
 		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
 		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
-		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+		feature:				SPI_NAND_FLASH_PLANE_SELECT_HAVE,
 	},
 	{
 		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
-		dev_id: 				_SPI_NAND_DEVICE_ID_DS35M1GA,
-		ptr_name:				"DS DS35M1GA",
-		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		dev_id: 				_SPI_NAND_DEVICE_ID_DS35M2GB,
+		ptr_name:				"DS DS35M2GB",
+		device_size:				_SPI_NAND_CHIP_SIZE_2GBIT,
 		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
-		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
 		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
 		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
 		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
 		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
-		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+		feature:				SPI_NAND_FLASH_PLANE_SELECT_HAVE,
 	},
 
 	{
@@ -3115,7 +3190,9 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND01GD1F1)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND01GS1Y2)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND02GS3Y2)) ||
-		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2)))
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_F35UQA001G)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_F35UQA512M)))
 	{
 		if(((status & 0x70) >> 4) == 0x7)
 		{
@@ -3125,7 +3202,9 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 	else if(((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GA)) ||
-		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)))
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GB)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GB)))
 	{
 		if(((status & 0x30) >> 4) == 0x2)
 		{
@@ -4073,7 +4152,9 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND01GD1F1)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND01GS1Y2)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND02GS3Y2)) ||
-		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2)))
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_F35UQA001G)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FORESEE) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_F35UQA512M)))
 	{
 		/* 1. Unlock All block */
 		spi_nand_protocol_get_status_reg_1(&feature);
@@ -4088,7 +4169,9 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 	else if(((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GA)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GA)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GA)) ||
-		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)))
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GB)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GB)))
 	{
 		/* 1. Unlock All block */
 		spi_nand_protocol_get_status_reg_1(&feature);
