@@ -15,11 +15,11 @@ BEGIN
     VALUE "FileDescription", "SNANDer - Serial Nor/nAND/Eeprom programmeR\0"
     VALUE "OriginalFilename", "SNANDer.exe\0"
     VALUE "CompanyName", "-= (c) 2018-2025 Igor Mokrushin aka McMCC =-\0"
-    VALUE "FileVersion", "1.7.8.0\0"
+    VALUE "FileVersion", "1.7.9.0\0"
     VALUE "InternalName", "SNANDer\0"
     VALUE "LegalCopyright", "Copyright (c) 2018-2025 by McMCC <mcmcc@mail.ru>\0"
     VALUE "ProductName","SNANDer\0"
-    VALUE "ProductVersion","1.7.8.0\0"
+    VALUE "ProductVersion","1.7.9.0\0"
    END
  END
  BLOCK "VarFileInfo"
