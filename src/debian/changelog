@@ -1,4 +1,4 @@
-snander (1.7.8-1) UNRELEASED; urgency=medium
+snander (1.7.9-1) UNRELEASED; urgency=medium
 
   * Update libusb version to v1.0.27.
   * Add GD25F256F SPI NOR Flash support.
@@ -22,6 +22,7 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Add WINBOND W25N01KV/W25N01GW/W25N04KV/W25N04KW SPI NAND Flash support.
   * Add FORESEE FS35ND01GS1Y2/F35UQA512M/F35UQA001G/F35UQA002G/F35SQA512M/F35SQA001G/F35SQA002G SPI NAND Flash support.
   * Add DS DS35M1GA/DS35M2GA/DS35Q2GB/DS35M2GB SPI NAND Flash support.
+  * Add KIOXIA TC58CVG0S3HRAIJ SPI NAND Flash support.
   * Add ESMT F50D1G41LB(2M) SPI NAND Flash support.
   * Add XTX XT26G02C SPI NAND Flash support.
   * Add FM FM25S02A SPI NAND Flash support.
@@ -29,4 +30,4 @@ snander (1.7.8-1) UNRELEASED; urgency=medium
   * Fix print size in KB when size is less than 1MB.
   * Fix when SPI_NAND_FLASH_DEBUG is enabled.
 
- -- McMCC <mcmcc@mail.ru>  Fri, 28 Mar 2025 16:58:49 +0800
+ -- McMCC <mcmcc@mail.ru>  Sun, 25 May 2025 12:38:46 +0800

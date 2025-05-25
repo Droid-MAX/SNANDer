@@ -1,6 +1,6 @@
 TARGET     = snander
 PKG        = $(TARGET)
-VERSION    = 1.7.8-1
+VERSION    = 1.7.9-1
 
 CC        ?= gcc
 STRIP     ?= strip
