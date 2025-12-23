@@ -255,6 +255,7 @@
 #define _SPI_NAND_DEVICE_ID_FS35ND02GS3Y2	0xEB
 #define _SPI_NAND_DEVICE_ID_FS35ND04GS2Y2	0xEC
 #define _SPI_NAND_DEVICE_ID_DS35Q1GA		0x71
+#define _SPI_NAND_DEVICE_ID_DS35Q1GB		0xF1
 #define _SPI_NAND_DEVICE_ID_DS35M1GA		0x21
 #define _SPI_NAND_DEVICE_ID_DS35Q2GA		0x72
 #define _SPI_NAND_DEVICE_ID_DS35M2GA		0x22
@@ -2045,6 +2046,19 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 	},
 	{
 		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
+		dev_id: 				_SPI_NAND_DEVICE_ID_DS35Q1GB,
+		ptr_name:				"DS DS35Q1GB",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_128BYTE,
+		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
+		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	{
+		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_DS,
 		dev_id: 				_SPI_NAND_DEVICE_ID_DS35M1GA,
 		ptr_name:				"DS DS35M1GA",
 		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
@@ -3330,6 +3344,7 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 	else if(((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GA)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GB)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GB)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GB)))
@@ -4301,6 +4316,7 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 	else if(((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GA)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GA)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GA)) ||
+		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q1GB)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M1GA)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35Q2GB)) ||
 		((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_DS) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_DS35M2GB)))
