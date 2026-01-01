@@ -484,7 +484,7 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		return -1;
 	}
 #elif defined(__linux__) || defined(__APPLE__)
-	unsigned long transferred = packet_len;
+	int transferred = packet_len;
     ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
 	if (ret < 0 || transferred != packet_len) {
 		printf("Could not send write command\n");
@@ -524,7 +524,7 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		return -1;
 	}
 #elif defined(__linux__) || defined(__APPLE__)
-	unsigned long transferred = sizeof(command_buf);
+	int transferred = sizeof(command_buf);
 	ret = libusb_bulk_transfer(devHandle, WRITE_EP, command_buf, sizeof(command_buf), &transferred, 1000);
 		if (ret < 0 || transferred != sizeof(command_buf)) {
 			printf("Could not send read command\n");

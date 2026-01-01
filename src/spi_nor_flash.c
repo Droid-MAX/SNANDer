@@ -847,6 +847,8 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	u32 page_offset, page_size;
 	int rc = 0, retlen = 0;
 	unsigned long plen = len;
+	unsigned char *write_buf;
+	int write_buf_len = FLASH_PAGESIZE + 5; /* Opcode (1) + Addr (4) + Data (256) */
 
 	snor_dbg("%s: to:%x len:%x \n", __func__, to, len);
 
@@ -857,9 +859,16 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	if (to + len > spi_chip_info->sector_size * spi_chip_info->n_sectors)
 		return -1;
 
+	write_buf = malloc(write_buf_len);
+	if (!write_buf) {
+		printf("Failed to allocate write buffer\n");
+		return -1;
+	}
+
 	timer_start();
 	/* Wait until finished previous write command. */
 	if (snor_wait_ready(2)) {
+		free(write_buf);
 		return -1;
 	}
 
@@ -870,6 +879,9 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	if (spi_chip_info->addr4b)
 		snor_4byte_mode(1);
 
+	/* Unprotect once before starting the write sequence */
+	snor_unprotect();
+
 	/* write everything in PAGESIZE chunks */
 	while (len > 0) {
 		page_size = min(len, FLASH_PAGESIZE - page_offset);
@@ -878,19 +890,24 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 
 		snor_wait_ready(3);
 		snor_write_enable();
-		snor_unprotect();
+		/* snor_unprotect();  Moved outside loop */
 
 		SPI_CONTROLLER_Chip_Select_Low();
 		/* Set up the opcode in the write buffer. */
-		SPI_CONTROLLER_Write_One_Byte(OPCODE_PP);
+		// SPI_CONTROLLER_Write_One_Byte(OPCODE_PP);
+		int idx = 0;
+		write_buf[idx++] = OPCODE_PP;
 
 		if (spi_chip_info->addr4b)
-			SPI_CONTROLLER_Write_One_Byte((to >> 24) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte((to >> 16) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte((to >> 8) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte(to & 0xff);
+			write_buf[idx++] = (to >> 24) & 0xff;
+		write_buf[idx++] = (to >> 16) & 0xff;
+		write_buf[idx++] = (to >> 8) & 0xff;
+		write_buf[idx++] = to & 0xff;
 
-		if(!SPI_CONTROLLER_Write_NByte(buf, page_size, SPI_CONTROLLER_SPEED_SINGLE))
+		memcpy(&write_buf[idx], buf, page_size);
+		idx += page_size;
+
+		if(!SPI_CONTROLLER_Write_NByte(write_buf, idx, SPI_CONTROLLER_SPEED_SINGLE))
 			rc = page_size;
 		else
 			rc = 1;
@@ -911,6 +928,7 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 				printf("%s: rc:%x page_size:%x\n",
 						__func__, rc, page_size);
 				snor_write_disable();
+				free(write_buf);
 				return retlen - rc;
 			}
 		}
@@ -928,6 +946,7 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	printf("Written 100%% [%ld] of [%ld] bytes      \n", plen - len, plen);
 	timer_end();
 
+	free(write_buf);
 	return retlen;
 }
 
