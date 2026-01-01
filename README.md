@@ -56,6 +56,16 @@ Pre-built binaries are available in the `releases/darwin-arm64/` folder for Appl
 
 > **Note**: Running the programmer requires `sudo` on macOS to access USB devices.
 
+**macOS Usage Examples:**
+
+Reading SPI NOR Flash (W25Q128BV):
+
+![macOS reading SPI NOR Flash](photos/macos-read-spi-nor.png)
+
+Reading SPI NAND Flash (W25N01GV):
+
+![macOS reading SPI NAND Flash](photos/macos-read-spi-nand.png)
+
 **Compiling for OpenWrt IPK**
 
 First download `OpenWrt SDK` and extract it
