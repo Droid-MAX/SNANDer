@@ -54,6 +54,7 @@
 
 #define MODE_1_IFACE 2
 #define MODE_2_IFACE 1
+#define CH347F_IFACE 4  /* CH347F uses interface 4 for SPI */
 
 
 #define	 CH341_PACKET_LENGTH		0x20
@@ -391,7 +392,7 @@ int config_stream(unsigned int speed)
 		return -1;
 	}
 	ret = 0;
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	ret = libusb_bulk_transfer(devHandle, WRITE_EP, buff, sizeof(buff), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not configure SPI interface\n");
@@ -432,7 +433,7 @@ static int ch347_cs_control(uint8_t cs1, uint8_t cs2)
 		printf("Could not change CS!\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	int32_t ret = libusb_bulk_transfer(devHandle, WRITE_EP, cmd, sizeof(cmd), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not change CS!\n");
@@ -482,7 +483,7 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		printf("Could not receive write command response\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	unsigned long transferred = packet_len;
     ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
 	if (ret < 0 || transferred != packet_len) {
@@ -522,7 +523,7 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		printf("Could not send read command\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	unsigned long transferred = sizeof(command_buf);
 	ret = libusb_bulk_transfer(devHandle, WRITE_EP, command_buf, sizeof(command_buf), &transferred, 1000);
 		if (ret < 0 || transferred != sizeof(command_buf)) {
@@ -537,7 +538,7 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		printf("Could not read data\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	ret = libusb_bulk_transfer(devHandle, READ_EP, buffer, CH347_PACKET_SIZE, &transferred, 1000);
 	if (ret < 0) {
 		printf("Could not read data\n");
@@ -600,7 +601,7 @@ int ch347_spi_shutdown(void)
     }else{
 	    DevIsOpened = FALSE;
     }
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 if (devHandle == NULL)
 		return -1;
     /* TODO: Set this depending on the mode */
@@ -674,7 +675,7 @@ int ch347_spi_init(void)
 	}else{
 		isCH347F = false;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	int32_t ret = libusb_init(NULL);
 	if (ret < 0) {
 		printf("Could not initialize libusb!\n");
@@ -701,9 +702,16 @@ int ch347_spi_init(void)
 		return -1;
 	}
 
-	/* TODO: set based on mode */
-	/* Mode 1 uses interface 2 for the SPI interface */
-	int spi_interface = MODE_1_IFACE;
+	/* Set isCH347F based on detected PID before claiming interface */
+	if (pid == CH347F_PID) {
+		isCH347F = true;
+	} else {
+		isCH347F = false;
+	}
+
+	/* CH347F uses interface 4, CH347T uses interface 2 */
+	int spi_interface = isCH347F ? CH347F_IFACE : MODE_1_IFACE;
+	printf("Using interface %d for %s\n", spi_interface, isCH347F ? "CH347F" : "CH347T");
 
 	ret = libusb_detach_kernel_driver(devHandle, spi_interface);
 	if (ret != 0 && ret != LIBUSB_ERROR_NOT_FOUND)
@@ -712,7 +720,7 @@ int ch347_spi_init(void)
 
 	ret = libusb_claim_interface(devHandle, spi_interface);
 	if (ret != 0) {
-		printf("Failed to claim interface %d: '%s'\n", MODE_1_IFACE, libusb_error_name(ret));
+		printf("Failed to claim interface %d: '%s'\n", spi_interface, libusb_error_name(ret));
 		goto error_exit;
 	}
 
@@ -727,11 +735,6 @@ int ch347_spi_init(void)
 	if (ret < 0) {
 		printf("Failed to get device descriptor: '%s'\n", libusb_error_name(ret));
 		goto error_exit;
-	}
-	if (pid == CH347F_PID){
-		isCH347F = true;
-	}else{
-		isCH347F = false;
 	}
 	printf("Device revision is %d.%01d.%01d\n",
 		(desc.bcdDevice >> 8) & 0x00FF,

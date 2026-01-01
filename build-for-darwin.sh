@@ -12,7 +12,8 @@ prepare_dirs(){
 }
 
 build_target(){
-	make -C $SRC_DIR TARGET_OS=Darwin strip && mv $SRC_DIR/snander $BUILD_DIR
+	LIBUSB_PREFIX=$(brew --prefix libusb 2>/dev/null || echo "/opt/homebrew/opt/libusb")
+	make -C $SRC_DIR TARGET_OS=Darwin LIBS_BASE=$LIBUSB_PREFIX strip && mv $SRC_DIR/snander $BUILD_DIR
 	make -C $SRC_DIR clean
 	return 0
 }
