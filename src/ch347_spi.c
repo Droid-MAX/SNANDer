@@ -172,6 +172,7 @@ static const struct dev_entry devs_ch347_spi[] = {
  * data bytes to each 32-byte packet with command + 31 bytes of data... */
 static struct libusb_transfer *transfer_out = NULL;
 static struct libusb_transfer *transfer_ins[USB_IN_TRANSFERS] = {0};
+static bool use_async_usb = false;
 
 enum trans_state {TRANS_ACTIVE = -2, TRANS_ERR = -1, TRANS_IDLE = 0};
 
@@ -185,6 +186,7 @@ static void print_hex(const void *buf, size_t len)
 			printf("\n");
 	}
 }
+#endif
 
 
 static void cb_common(const char *func, struct libusb_transfer *transfer)
@@ -340,7 +342,6 @@ err:
 	}
 	return -1;
 }
-#endif
 
 static uint16_t read_le16(const uint8_t *base, size_t offset) {
     // 读取 16 位值（两个字节）并以小端序合并
@@ -484,16 +485,24 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		return -1;
 	}
 #elif defined(__linux__) || defined(__APPLE__)
-	int transferred = packet_len;
-    ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
-	if (ret < 0 || transferred != packet_len) {
-		printf("Could not send write command\n");
-		return -1;
-	}
-	ret = libusb_bulk_transfer(devHandle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
-	if (ret < 0) {
-		printf("Could not receive write command response\n");
-		return -1;
+	if (use_async_usb) {
+		ret = usb_transfer(__func__, packet_len, sizeof(resp_buf), buffer, resp_buf);
+		if (ret < 0) {
+			printf("Could not send write command\n");
+			return -1;
+		}
+	} else {
+		int transferred = packet_len;
+		ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
+		if (ret < 0 || transferred != packet_len) {
+			printf("Could not send write command\n");
+			return -1;
+		}
+		ret = libusb_bulk_transfer(devHandle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
+		if (ret < 0) {
+			printf("Could not receive write command response\n");
+			return -1;
+		}
 	}
 #endif
 		bytes_written += data_len;
@@ -604,6 +613,19 @@ int ch347_spi_shutdown(void)
 #elif defined(__linux__) || defined(__APPLE__)
 if (devHandle == NULL)
 		return -1;
+	if (use_async_usb) {
+		if (transfer_out) {
+			libusb_free_transfer(transfer_out);
+			transfer_out = NULL;
+		}
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i]) {
+				libusb_free_transfer(transfer_ins[i]);
+				transfer_ins[i] = NULL;
+			}
+		}
+		use_async_usb = false;
+	}
     /* TODO: Set this depending on the mode */
 	int spi_interface = MODE_1_IFACE;
 	libusb_release_interface(devHandle, spi_interface);
@@ -740,6 +762,38 @@ int ch347_spi_init(void)
 		(desc.bcdDevice >> 8) & 0x00FF,
 		(desc.bcdDevice >> 4) & 0x000F,
 		(desc.bcdDevice >> 0) & 0x000F);
+
+	transfer_out = libusb_alloc_transfer(0);
+	if (transfer_out) {
+		libusb_fill_bulk_transfer(transfer_out, devHandle, WRITE_EP, NULL, 0, cb_out, NULL, 1000);
+	}
+	for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+		transfer_ins[i] = libusb_alloc_transfer(0);
+		if (transfer_ins[i]) {
+			libusb_fill_bulk_transfer(transfer_ins[i], devHandle, READ_EP, NULL, 0, cb_in, NULL, 1000);
+		}
+	}
+	use_async_usb = (transfer_out != NULL);
+	if (use_async_usb) {
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i] == NULL) {
+				use_async_usb = false;
+				break;
+			}
+		}
+	}
+	if (!use_async_usb) {
+		if (transfer_out) {
+			libusb_free_transfer(transfer_out);
+			transfer_out = NULL;
+		}
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i]) {
+				libusb_free_transfer(transfer_ins[i]);
+				transfer_ins[i] = NULL;
+			}
+		}
+	}
 #endif
 	/* TODO: add programmer cfg for things like CS pin and divisor */
 	if (config_stream(0) < 0)

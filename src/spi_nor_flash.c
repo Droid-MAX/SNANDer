@@ -76,6 +76,11 @@
 /* #define snor_dbg(args...) do { if (1) printf(args); } while(0) */
 
 #define udelay(x)			usleep(x)
+#if defined(__APPLE__)
+#define SNOR_POLL_USEC 1000
+#else
+#define SNOR_POLL_USEC 500
+#endif
 
 struct chip_info {
 	char		*name;
@@ -150,7 +155,7 @@ static int snor_wait_ready(int sleep_ms)
 		else if (!(sr & (SR_WIP | SR_EPE | SR_WEL))) {
 			return 0;
 		}
-		udelay(500);
+		udelay(SNOR_POLL_USEC);
 		/* REVISIT sometimes sleeping would be best */
 	}
 	printf("%s: read_sr fail: %x\n", __func__, sr);

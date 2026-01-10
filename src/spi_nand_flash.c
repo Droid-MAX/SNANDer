@@ -39,6 +39,12 @@
 #include "nandcmd_api.h"
 #include "timer.h"
 
+#if defined(__APPLE__)
+#define SPI_NAND_POLL_USEC 1000
+#else
+#define SPI_NAND_POLL_USEC 0
+#endif
+
 /* NAMING CONSTANT DECLARATIONS ------------------------------------------------------ */
 
 /* SPI NAND Command Set */
@@ -3417,8 +3423,11 @@ static SPI_NAND_FLASH_RTN_T spi_nand_load_page_into_cache( u32 page_number)
 
 		/*  Checking status for load page/erase/program complete */
 		do {
-			spi_nand_protocol_get_status_reg_3( &status);
-		} while( status & _SPI_NAND_VAL_OIP) ;
+			spi_nand_protocol_get_status_reg_3(&status);
+			if ((status & _SPI_NAND_VAL_OIP) && SPI_NAND_POLL_USEC > 0) {
+				usleep(SPI_NAND_POLL_USEC);
+			}
+		} while (status & _SPI_NAND_VAL_OIP);
 
 		_SPI_NAND_DEBUG_PRINTF(SPI_NAND_FLASH_DEBUG_LEVEL_1, "spi_nand_load_page_into_cache : status = 0x%x\n", status);
 		if (ECC_fcheck && !ECC_ignore)
