@@ -9,7 +9,14 @@ The primary bottleneck was identified as excessive USB transaction overhead.
 *   **Reduced Overhead**: Removed redundant `unprotect` calls within the write loop.
 *   **Pointer Fix**: Corrected data type mismatches in `ch347_spi.c` (`unsigned long` vs `int`) for `libusb` calls on macOS to prevent hangs.
 
-## 3. Benchmark Results (16MB Full Chip Write)
+## 3. Environment and Test Data
+- Device: W25Q128BV (16MB)
+- Programmer: CH347F (USB)
+- OS: macOS (libusb/darwin)
+- Test file: `test_16M_random.bin` (16,777,216 bytes)
+- Note: non-sudo runs may show libusb access warnings and can affect stability.
+
+## 4. Benchmark Results (16MB Full Chip Write)
 
 The following tests were conducted on a **W25Q128FV (16MB)** chip using the optimized binary.
 
@@ -21,6 +28,36 @@ The following tests were conducted on a **W25Q128FV (16MB)** chip using the opti
 | **Status** | OK | **OK** | Stable with `sudo` |
 
 **Note**: A smaller 1MB test showed speeds up to **105 KB/s** (1MB in 10s). Performance may vary slightly based on thermal throttling or system load during long 16MB operations, but is consistently faster and stable.
+
+### Latest Results (macOS, CH347F, W25Q128BV, 16MB)
+
+| Metric | Default (60M) | 30M | Notes |
+| :--- | :--- | :--- | :--- |
+| **Write Time** | **78 seconds** | **85 seconds** | Write time changes little with SPI speed |
+| **Verify Time** | **3 seconds** | **5 seconds** | Read slower at 30M |
+| **Status** | OK | OK | Verified OK |
+
+Timing breakdown with optimized polling (60M):
+
+```
+Timing: usb/command 17.340s, wait 51.571s (poll 49.722s, sleep 1.844s, other 0.005s), other 15.069s
+```
+
+Conclusion: write time is dominated by page-program/WIP polling; SPI clock affects read speed more than total write time.
+
+### Consolidated Test Log (selected)
+
+- Erase (sudo): 33s
+- Write + verify (non-sudo): 217s write, 3s verify, OK
+- Write (sudo): 194s
+- 2MB write + verify (sudo, timing enabled): 27s
+  - Timing: usb/command 3.439s, wait 20.699s, other 3.151s
+- 2MB write + verify (non-sudo, timing enabled): 26s
+  - Timing: usb/command 3.268s, wait 20.134s (poll 9.938s, sleep 10.196s), other 2.980s
+- Write + verify (60M, latest): 78s write, 3s verify, OK
+- Write + verify (30M): 85s write, 5s verify, OK
+- Write + verify (60M, timing enabled): 84s write
+  - Timing: usb/command 17.340s, wait 51.571s (poll 49.722s, sleep 1.844s), other 15.069s
 
 ### Detailed Logs
 
@@ -49,6 +86,10 @@ Elapsed time: 3 seconds
 Status: OK
 ```
 
-## 4. Stability Recommendations
+## 5. Stability Recommendations
 *   **Use `sudo`**: On macOS, running `snander` with `sudo` is critical to prevent `LIBUSB_ERROR_ACCESS` and interface locking issues during intensive operations.
 *   **Validation**: The new verify speed (3 seconds for 16MB) confirms that reading is operating at very high efficiency (~5.3 MB/s).
+
+## 6. Related Documents
+- `test_report.md` (index)
+- `change_test_log.md` (index)
