@@ -18,16 +18,16 @@ The primary bottleneck was identified as excessive USB transaction overhead.
 
 ## 4. Benchmark Results (16MB Full Chip Write)
 
-The following tests were conducted on a **W25Q128FV (16MB)** chip using the optimized binary.
+The following tests were conducted on a **W25Q128FV (16MB)** chip.
 
-| Metric | Before Optimization | After Optimization | Improvement |
+| Metric | Initial (251s) | Optimized (latest) | Improvement |
 | :--- | :--- | :--- | :--- |
-| **Write Time** | 251 seconds | **215 seconds** | **+14.3%** |
-| **Write Speed** | ~66.8 KB/s | **~78.0 KB/s** | **+11.2 KB/s** |
+| **Write Time** | 251 seconds | **78 seconds** | **-69%** |
+| **Write Speed** | ~66.8 KB/s | **~205 KB/s** | **~3.1x** |
 | **Verify Time** | N/A | **3 seconds** | **5.3 MB/s (Limiting factor: USB Read)** |
 | **Status** | OK | **OK** | Stable with `sudo` |
 
-**Note**: A smaller 1MB test showed speeds up to **105 KB/s** (1MB in 10s). Performance may vary slightly based on thermal throttling or system load during long 16MB operations, but is consistently faster and stable.
+**Note**: An earlier optimized pass reached **215s** (from 251s). The latest results reflect the current code and settings. Performance can vary based on system load during long operations.
 
 ### Latest Results (macOS, CH347F, W25Q128BV, 16MB)
 
