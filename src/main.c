@@ -83,6 +83,7 @@ void usage(void)
 		" -w <filename>  write chip with data from filename\n"\
 		" -r <filename>  read chip and save data to filename\n"\
 		" -v             verify after write on chip\n"\
+		" -S <speed>     set SPI speed {60M|30M|15M|10M|5M|2M}\n"\
 		" -t             enable write timing output (SPI NOR)\n";
 	printf(use);
 	exit(0);
@@ -99,13 +100,19 @@ int main(int argc, char* argv[])
 	title();
 
 #ifdef EEPROM_SUPPORT
-	while ((c = getopt(argc, argv, "diIhveLkl:a:w:r:o:s:E:f:8t")) != -1)
+	while ((c = getopt(argc, argv, "diIhveLkl:a:w:r:o:s:E:f:8tS:")) != -1)
 #else
-	while ((c = getopt(argc, argv, "diIhveLkl:a:w:r:o:s:t")) != -1)
+	while ((c = getopt(argc, argv, "diIhveLkl:a:w:r:o:s:tS:")) != -1)
 #endif
 	{
 		switch(c)
 		{
+			case 'S':
+				if (ch347_set_spispeed(optarg) < 0) {
+					printf("Invalid SPI speed '%s'. Use 60M/30M/15M/10M/5M/2M.\n", optarg);
+					exit(0);
+				}
+				break;
 			case 't':
 				snor_set_timing(1);
 				break;

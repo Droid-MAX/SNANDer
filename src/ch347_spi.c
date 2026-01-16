@@ -23,6 +23,7 @@
  */
 #include <string.h>
 #include <stdio.h>
+#include <strings.h>
 #include "ch347_spi.h"
 #include <libusb-1.0/libusb.h>
 #include <stdbool.h>
@@ -81,6 +82,8 @@ static const struct device_speeds spispeeds[] = {
 	{"468.75",	0x7},
 	{NULL,		0x0}
 };
+static int ch347_spispeed = 0x0;
+static const char *ch347_spispeed_name = "60M";
 bool isCH347F = false;
 #ifdef _WIN32
 #include <windows.h>
@@ -348,6 +351,48 @@ static uint16_t read_le16(const uint8_t *base, size_t offset) {
     uint16_t value = base[offset] | (base[offset + 1] << 8);
 	// printf("value = %d\n",value);
     return value;
+}
+
+int ch347_set_spispeed(const char *speed_str)
+{
+	if (!speed_str)
+		return -1;
+
+	if (!strcasecmp(speed_str, "60M") || !strcasecmp(speed_str, "60")) {
+		ch347_spispeed = 0x0;
+		ch347_spispeed_name = "60M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "30M") || !strcasecmp(speed_str, "30")) {
+		ch347_spispeed = 0x1;
+		ch347_spispeed_name = "30M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "15M") || !strcasecmp(speed_str, "15")) {
+		ch347_spispeed = 0x2;
+		ch347_spispeed_name = "15M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "10M") || !strcasecmp(speed_str, "10")) {
+		ch347_spispeed = 0x3;
+		ch347_spispeed_name = "7.5M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "5M") || !strcasecmp(speed_str, "5")) {
+		ch347_spispeed = 0x4;
+		ch347_spispeed_name = "3.75M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "2M") || !strcasecmp(speed_str, "2")) {
+		ch347_spispeed = 0x5;
+		ch347_spispeed_name = "1.875M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+
+	return -1;
 }
 
 /*   Set the I2C bus speed (speed(b1b0): 0 = 20kHz; 1 = 100kHz, 2 = 400kHz, 3 = 750kHz).
@@ -641,7 +686,6 @@ int ch347_spi_init(void)
 	int open_res = -1;
     uint16_t vid = CH347_VID;
 	uint16_t pid = devs_ch347_spi[0].device_id;
-	int spispeed = 0x0;    //defaulet 60M SPI
 	int i = 0;
 #ifdef _WIN32
     if (uhModule == 0) {
@@ -796,8 +840,9 @@ int ch347_spi_init(void)
 	}
 #endif
 	/* TODO: add programmer cfg for things like CS pin and divisor */
-	if (config_stream(0) < 0)
+	if (config_stream(ch347_spispeed) < 0)
 		goto error_exit;
+	printf("SPI speed set to %s.\n", ch347_spispeed_name);
 	return 0;
 error_exit:
 	ch347_spi_shutdown();

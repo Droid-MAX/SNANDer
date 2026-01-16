@@ -30,6 +30,7 @@ int ch347_spi_shutdown(void);
 int ch347_spi_send_command(unsigned int writecnt, unsigned int readcnt, const unsigned char *writearr, unsigned char *readarr);
 int enable_pins(bool enable);
 int config_stream(unsigned int speed);
+int ch347_set_spispeed(const char *speed_str);
 
 #endif /* __CH341_SPI_H__ */
 /* End of [ch347_spi.h] package */
