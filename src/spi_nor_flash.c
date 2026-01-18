@@ -209,6 +209,9 @@ static int snor_wait_ready(int sleep_ms)
 		if (ret < 0)
 			break;
 		else if (!(sr & SR_WIP)) {
+			if (sr & SR_EPE) {
+				printf("%s: Erase/Program error detected: 0x%x\n", __func__, sr);
+			}
 			if (write_timing_active && wait_start)
 				write_wait_us += (now_us() - wait_start);
 			return 0;
