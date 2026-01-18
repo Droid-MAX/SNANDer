@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/time.h>
 #include "types.h"
 #include "spi_nand_flash.h"
 #include "spi_controller.h"
@@ -58,6 +59,26 @@
 #define _SPI_NAND_OP_WRITE_DISABLE			0x04	/* Resetting the Write Enable Latch (WEL) */
 #define _SPI_NAND_OP_PROGRAM_LOAD_SINGLE		0x02	/* Write data into cache of SPI NAND chip with cache reset, single speed */
 #define _SPI_NAND_OP_PROGRAM_LOAD_QUAD			0x32	/* Write data into cache of SPI NAND chip with cache reset, quad speed */
+
+static uint64_t nand_now_us(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (uint64_t)tv.tv_sec * 1000000ULL + (uint64_t)tv.tv_usec;
+}
+
+static unsigned int spi_nand_poll_delay_us(uint64_t elapsed_us)
+{
+#if defined(__APPLE__)
+	if (elapsed_us < 2000)
+		return 20;
+	if (elapsed_us < 20000)
+		return 100;
+	if (elapsed_us < 200000)
+		return 500;
+#endif
+	return SPI_NAND_POLL_USEC;
+}
 #define _SPI_NAND_OP_PROGRAM_LOAD_RAMDOM_SINGLE		0x84	/* Write data into cache of SPI NAND chip, single speed */
 #define _SPI_NAND_OP_PROGRAM_LOAD_RAMDON_QUAD		0x34	/* Write data into cache of SPI NAND chip, quad speed */
 
@@ -3417,6 +3438,8 @@ static SPI_NAND_FLASH_RTN_T spi_nand_load_page_into_cache( u32 page_number)
 	}
 	else
 	{
+		uint64_t wait_start = nand_now_us();
+
 		spi_nand_select_die ( page_number );
 
 		spi_nand_protocol_page_read ( page_number );
@@ -3424,8 +3447,10 @@ static SPI_NAND_FLASH_RTN_T spi_nand_load_page_into_cache( u32 page_number)
 		/*  Checking status for load page/erase/program complete */
 		do {
 			spi_nand_protocol_get_status_reg_3(&status);
-			if ((status & _SPI_NAND_VAL_OIP) && SPI_NAND_POLL_USEC > 0) {
-				usleep(SPI_NAND_POLL_USEC);
+			if (status & _SPI_NAND_VAL_OIP) {
+				unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+				if (delay_us > 0)
+					usleep(delay_us);
 			}
 		} while (status & _SPI_NAND_VAL_OIP);
 
@@ -3515,8 +3540,14 @@ SPI_NAND_FLASH_RTN_T spi_nand_erase_block ( u32 block_index)
 	spi_nand_protocol_block_erase( block_index );
 
 	/* 2.4 Checking status for erase complete */
+	uint64_t wait_start = nand_now_us();
 	do {
 		spi_nand_protocol_get_status_reg_3( &status);
+		if (status & _SPI_NAND_VAL_OIP) {
+			unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+			if (delay_us > 0)
+				usleep(delay_us);
+		}
 	} while( status & _SPI_NAND_VAL_OIP) ;
 
 	/* 2.5 Disable write_flash */
@@ -3769,8 +3800,14 @@ static SPI_NAND_FLASH_RTN_T spi_nand_write_page( u32 page_number, u32 data_offse
 		spi_nand_protocol_program_execute ( page_number );
 
 		/* Checking status for erase complete */
+		uint64_t wait_start = nand_now_us();
 		do {
 			spi_nand_protocol_get_status_reg_3( &status);
+			if (status & _SPI_NAND_VAL_OIP) {
+				unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+				if (delay_us > 0)
+					usleep(delay_us);
+			}
 		} while( status & _SPI_NAND_VAL_OIP) ;
 
 		/*. Disable write_flash */
