@@ -33,11 +33,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/time.h>
 #include "types.h"
 #include "spi_nand_flash.h"
 #include "spi_controller.h"
 #include "nandcmd_api.h"
 #include "timer.h"
+
+#if defined(__APPLE__)
+#define SPI_NAND_POLL_USEC 1000
+#else
+#define SPI_NAND_POLL_USEC 500
+#endif
+
+/* 5 second timeout for NAND operations */
+#define NAND_POLL_TIMEOUT_US 5000000
 
 /* NAMING CONSTANT DECLARATIONS ------------------------------------------------------ */
 
@@ -52,6 +62,33 @@
 #define _SPI_NAND_OP_WRITE_DISABLE			0x04	/* Resetting the Write Enable Latch (WEL) */
 #define _SPI_NAND_OP_PROGRAM_LOAD_SINGLE		0x02	/* Write data into cache of SPI NAND chip with cache reset, single speed */
 #define _SPI_NAND_OP_PROGRAM_LOAD_QUAD			0x32	/* Write data into cache of SPI NAND chip with cache reset, quad speed */
+
+static uint64_t nand_now_us(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (uint64_t)tv.tv_sec * 1000000ULL + (uint64_t)tv.tv_usec;
+}
+
+static unsigned int spi_nand_poll_delay_us(uint64_t elapsed_us)
+{
+#if defined(__APPLE__)
+	if (elapsed_us < 2000)
+		return 20;
+	if (elapsed_us < 20000)
+		return 100;
+	if (elapsed_us < 200000)
+		return 500;
+#else
+	if (elapsed_us < 1000)
+		return 10;
+	if (elapsed_us < 10000)
+		return 50;
+	if (elapsed_us < 100000)
+		return 200;
+#endif
+	return SPI_NAND_POLL_USEC;
+}
 #define _SPI_NAND_OP_PROGRAM_LOAD_RAMDOM_SINGLE		0x84	/* Write data into cache of SPI NAND chip, single speed */
 #define _SPI_NAND_OP_PROGRAM_LOAD_RAMDON_QUAD		0x34	/* Write data into cache of SPI NAND chip, quad speed */
 
@@ -3411,14 +3448,26 @@ static SPI_NAND_FLASH_RTN_T spi_nand_load_page_into_cache( u32 page_number)
 	}
 	else
 	{
+		uint64_t wait_start = nand_now_us();
+
 		spi_nand_select_die ( page_number );
 
 		spi_nand_protocol_page_read ( page_number );
 
 		/*  Checking status for load page/erase/program complete */
 		do {
-			spi_nand_protocol_get_status_reg_3( &status);
-		} while( status & _SPI_NAND_VAL_OIP) ;
+			spi_nand_protocol_get_status_reg_3(&status);
+			if (status & _SPI_NAND_VAL_OIP) {
+				if ((nand_now_us() - wait_start) >= NAND_POLL_TIMEOUT_US) {
+					_SPI_NAND_PRINTF("spi_nand_load_page_into_cache: timeout waiting for OIP, page=0x%x\n", page_number);
+					rtn_status = SPI_NAND_FLASH_RTN_TIMEOUT;
+					break;
+				}
+				unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+				if (delay_us > 0)
+					usleep(delay_us);
+			}
+		} while (status & _SPI_NAND_VAL_OIP);
 
 		_SPI_NAND_DEBUG_PRINTF(SPI_NAND_FLASH_DEBUG_LEVEL_1, "spi_nand_load_page_into_cache : status = 0x%x\n", status);
 		if (ECC_fcheck && !ECC_ignore)
@@ -3506,8 +3555,19 @@ SPI_NAND_FLASH_RTN_T spi_nand_erase_block ( u32 block_index)
 	spi_nand_protocol_block_erase( block_index );
 
 	/* 2.4 Checking status for erase complete */
+	uint64_t wait_start = nand_now_us();
 	do {
 		spi_nand_protocol_get_status_reg_3( &status);
+		if (status & _SPI_NAND_VAL_OIP) {
+			if ((nand_now_us() - wait_start) >= NAND_POLL_TIMEOUT_US) {
+				_SPI_NAND_PRINTF("spi_nand_erase_block: timeout waiting for OIP, block=0x%x\n", block_index);
+				rtn_status = SPI_NAND_FLASH_RTN_TIMEOUT;
+				break;
+			}
+			unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+			if (delay_us > 0)
+				usleep(delay_us);
+		}
 	} while( status & _SPI_NAND_VAL_OIP) ;
 
 	/* 2.5 Disable write_flash */
@@ -3759,9 +3819,20 @@ static SPI_NAND_FLASH_RTN_T spi_nand_write_page( u32 page_number, u32 data_offse
 		/* Execute program data into SPI NAND chip  */
 		spi_nand_protocol_program_execute ( page_number );
 
-		/* Checking status for erase complete */
+		/* Checking status for program complete */
+		uint64_t wait_start = nand_now_us();
 		do {
 			spi_nand_protocol_get_status_reg_3( &status);
+			if (status & _SPI_NAND_VAL_OIP) {
+				if ((nand_now_us() - wait_start) >= NAND_POLL_TIMEOUT_US) {
+					_SPI_NAND_PRINTF("spi_nand_write_page: timeout waiting for OIP, page=0x%x\n", page_number);
+					rtn_status = SPI_NAND_FLASH_RTN_TIMEOUT;
+					break;
+				}
+				unsigned int delay_us = spi_nand_poll_delay_us(nand_now_us() - wait_start);
+				if (delay_us > 0)
+					usleep(delay_us);
+			}
 		} while( status & _SPI_NAND_VAL_OIP) ;
 
 		/*. Disable write_flash */

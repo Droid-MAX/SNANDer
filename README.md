@@ -39,13 +39,32 @@ After successful compilation, the target executable file will be generated in th
 
 **Compiling for MacOS**
 
-After installing the necessary tools, building `snander` is as simple as running the included script:
+Prerequisites:
+* Xcode Command Line Tools: `xcode-select --install`
+* Homebrew: https://brew.sh
+* libusb: `brew install libusb`
+
+After installing the prerequisites, building `snander` is as simple as running the included script:
 
 ```
 ./build-for-darwin.sh
 ```
 
 After successful compilation, the target executable file will be generated in the `build` folder.
+
+Pre-built binaries are available in the `releases/darwin-arm64/` folder for Apple Silicon Macs.
+
+> **Note**: Running the programmer requires `sudo` on macOS to access USB devices.
+
+**macOS Usage Examples:**
+
+Reading SPI NOR Flash (W25Q128BV):
+
+![macOS reading SPI NOR Flash](photos/macos-read-spi-nor.png)
+
+Reading SPI NAND Flash (W25N01GV):
+
+![macOS reading SPI NAND Flash](photos/macos-read-spi-nand.png)
 
 **Compiling for OpenWrt IPK**
 

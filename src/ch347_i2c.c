@@ -44,7 +44,7 @@ static void cbBulkOut(struct libusb_transfer *transfer);
 extern pCH347ReadData CH347ReadData;
 extern pCH347WriteData CH347WriteData;
 extern ULONG ugIndex;
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 extern struct libusb_device_handle *devHandle;
 #endif
 extern bool isCH347F;
@@ -71,7 +71,7 @@ int32_t ch347i2cConfig(int speed)
             fprintf(stderr, "USB read error\r\n");
             return -1;
         }    
-        #elif defined(__linux__)
+        #elif defined(__linux__) || defined(__APPLE__)
         ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_switch_cmd, 11, &actuallen, DEFAULT_TIMEOUT);
         if (ret < 0) {
         fprintf(stderr, "ch347setstream(): Failed write %d bytes '%s'\n", 2, strerror(-ret));
@@ -95,7 +95,7 @@ int32_t ch347i2cConfig(int speed)
         fprintf(stderr, "USB write error\r\n");
         return -1;
     }
-    #elif defined(__linux__)
+    #elif defined(__linux__) || defined(__APPLE__)
     ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_dev.obuf, 3, &actuallen, DEFAULT_TIMEOUT);
     if (ret < 0) {
         fprintf(stderr, "ch347setstream(): Failed write %d bytes '%s'\n", 2, strerror(-ret));
@@ -206,7 +206,7 @@ int ch347_i2c_write(struct i2c_msg *msg) {
             fprintf(stderr, "USB read error\r\n");
             return -1;
         }
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
         ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_dev.obuf, outptr - i2c_dev.obuf, &actuallen, DEFAULT_TIMEOUT);
 
         if (ret < 0) {
@@ -263,7 +263,7 @@ int ch347_i2c_read(struct i2c_msg *msg)
             fprintf(stderr, "USB read error\r\n");
             return -1;
         }
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
         int ret = libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_dev.obuf, ptr - i2c_dev.obuf, &actuallen, DEFAULT_TIMEOUT);
         if (ret < 0) {
             fprintf(stderr, "USB write error : %s\r\n", strerror(-ret));
@@ -369,7 +369,7 @@ int ch347delay_ms(unsigned ms) {
         fprintf(stderr, "USB write error.\r\n");
         return -1;
     }
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
     libusb_bulk_transfer(devHandle, BULK_WRITE_ENDPOINT, i2c_dev.obuf, 3, &actuallen, DEFAULT_TIMEOUT);
 #endif
     return 0;

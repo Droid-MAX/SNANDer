@@ -18,6 +18,7 @@
 int snor_read(unsigned char *buf, unsigned long from, unsigned long len);
 int snor_erase(unsigned long offs, unsigned long len);
 int snor_write(unsigned char *buf, unsigned long to, unsigned long len);
+void snor_set_timing(int enable);
 long snor_init(void);
 void support_snor_list(void);
 

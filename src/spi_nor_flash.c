@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/time.h>
 #include "spi_controller.h"
 #include "snorcmd_api.h"
 #include "types.h"
@@ -76,6 +77,53 @@
 /* #define snor_dbg(args...) do { if (1) printf(args); } while(0) */
 
 #define udelay(x)			usleep(x)
+#if defined(__APPLE__)
+#define SNOR_POLL_USEC 1000
+#else
+#define SNOR_POLL_USEC 500
+#endif
+
+static int write_timing_enabled = 0;
+static int write_timing_active = 0;
+static uint64_t write_usb_us = 0;
+static uint64_t write_wait_us = 0;
+static uint64_t write_wait_poll_us = 0;
+static uint64_t write_wait_sleep_us = 0;
+static uint64_t write_total_us = 0;
+static unsigned long write_pages = 0;
+static unsigned long write_bytes = 0;
+
+static uint64_t now_us(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (uint64_t)tv.tv_sec * 1000000ULL + (uint64_t)tv.tv_usec;
+}
+
+static unsigned int snor_poll_delay_us(uint64_t elapsed_us)
+{
+#if defined(__APPLE__)
+	if (elapsed_us < 2000)
+		return 20;
+	if (elapsed_us < 20000)
+		return 100;
+	if (elapsed_us < 200000)
+		return 500;
+#else
+	if (elapsed_us < 1000)
+		return 10;
+	if (elapsed_us < 10000)
+		return 50;
+	if (elapsed_us < 100000)
+		return 200;
+#endif
+	return SNOR_POLL_USEC;
+}
+
+void snor_set_timing(int enable)
+{
+	write_timing_enabled = enable ? 1 : 0;
+}
 
 struct chip_info {
 	char		*name;
@@ -138,21 +186,50 @@ static inline int snor_unprotect(void)
  */
 static int snor_wait_ready(int sleep_ms)
 {
+	uint64_t wait_start = 0;
+	uint64_t timeout_start = now_us();
+	uint64_t timeout_us = (uint64_t)(sleep_ms + 1) * 1000 * 1000;
+	if (write_timing_active)
+		wait_start = now_us();
+
 	int count;
 	int sr = 0;
 
 	/* one chip guarantees max 5 msec wait here after page writes,
 	 * but potentially three seconds (!) after page erase.
 	 */
-	for (count = 0; count < ((sleep_ms + 1) * 1000); count++) {
-		if ((snor_read_sr((u8 *)&sr)) < 0)
+	for (count = 0; ; count++) {
+		int ret;
+		uint64_t poll_start = 0;
+		if (write_timing_active)
+			poll_start = now_us();
+		ret = snor_read_sr((u8 *)&sr);
+		if (write_timing_active && poll_start)
+			write_wait_poll_us += (now_us() - poll_start);
+		if (ret < 0)
 			break;
-		else if (!(sr & (SR_WIP | SR_EPE | SR_WEL))) {
+		else if (!(sr & SR_WIP)) {
+			if (sr & SR_EPE) {
+				printf("%s: Erase/Program error detected: 0x%x\n", __func__, sr);
+			}
+			if (write_timing_active && wait_start)
+				write_wait_us += (now_us() - wait_start);
 			return 0;
 		}
-		udelay(500);
+		if ((now_us() - timeout_start) >= timeout_us)
+			break;
+		unsigned int delay_us = snor_poll_delay_us(now_us() - timeout_start);
+		if (write_timing_active) {
+			uint64_t sleep_start = now_us();
+			udelay(delay_us);
+			write_wait_sleep_us += (now_us() - sleep_start);
+		} else {
+			udelay(delay_us);
+		}
 		/* REVISIT sometimes sleeping would be best */
 	}
+	if (write_timing_active && wait_start)
+		write_wait_us += (now_us() - wait_start);
 	printf("%s: read_sr fail: %x\n", __func__, sr);
 	return -1;
 }
@@ -847,6 +924,8 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	u32 page_offset, page_size;
 	int rc = 0, retlen = 0;
 	unsigned long plen = len;
+	unsigned char *write_buf;
+	int write_buf_len = FLASH_PAGESIZE + 5; /* Opcode (1) + Addr (4) + Data (256) */
 
 	snor_dbg("%s: to:%x len:%x \n", __func__, to, len);
 
@@ -857,9 +936,27 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	if (to + len > spi_chip_info->sector_size * spi_chip_info->n_sectors)
 		return -1;
 
+	write_buf = malloc(write_buf_len);
+	if (!write_buf) {
+		printf("Failed to allocate write buffer\n");
+		return -1;
+	}
+
+	write_timing_active = write_timing_enabled ? 1 : 0;
+	if (write_timing_active) {
+		write_usb_us = 0;
+		write_wait_us = 0;
+		write_wait_poll_us = 0;
+		write_wait_sleep_us = 0;
+		write_pages = 0;
+		write_bytes = len;
+		write_total_us = now_us();
+	}
+
 	timer_start();
 	/* Wait until finished previous write command. */
 	if (snor_wait_ready(2)) {
+		free(write_buf);
 		return -1;
 	}
 
@@ -870,32 +967,52 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	if (spi_chip_info->addr4b)
 		snor_4byte_mode(1);
 
+	/* Unprotect once before starting the write sequence */
+	snor_unprotect();
+
 	/* write everything in PAGESIZE chunks */
 	while (len > 0) {
 		page_size = min(len, FLASH_PAGESIZE - page_offset);
 		page_offset = 0;
 		/* write the next page to flash */
 
-		snor_wait_ready(3);
 		snor_write_enable();
-		snor_unprotect();
+		/* snor_unprotect();  Moved outside loop */
 
-		SPI_CONTROLLER_Chip_Select_Low();
 		/* Set up the opcode in the write buffer. */
-		SPI_CONTROLLER_Write_One_Byte(OPCODE_PP);
+		// SPI_CONTROLLER_Write_One_Byte(OPCODE_PP);
+		int idx = 0;
+		write_buf[idx++] = OPCODE_PP;
 
 		if (spi_chip_info->addr4b)
-			SPI_CONTROLLER_Write_One_Byte((to >> 24) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte((to >> 16) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte((to >> 8) & 0xff);
-		SPI_CONTROLLER_Write_One_Byte(to & 0xff);
+			write_buf[idx++] = (to >> 24) & 0xff;
+		write_buf[idx++] = (to >> 16) & 0xff;
+		write_buf[idx++] = (to >> 8) & 0xff;
+		write_buf[idx++] = to & 0xff;
 
-		if(!SPI_CONTROLLER_Write_NByte(buf, page_size, SPI_CONTROLLER_SPEED_SINGLE))
+		memcpy(&write_buf[idx], buf, page_size);
+		idx += page_size;
+
+		uint64_t usb_start = 0;
+		if (write_timing_active)
+			usb_start = now_us();
+		SPI_CONTROLLER_Chip_Select_Low();
+		if(!SPI_CONTROLLER_Write_NByte(write_buf, idx, SPI_CONTROLLER_SPEED_SINGLE))
 			rc = page_size;
 		else
 			rc = 1;
 
 		SPI_CONTROLLER_Chip_Select_High();
+		if (write_timing_active) {
+			write_usb_us += (now_us() - usb_start);
+			write_pages++;
+		}
+
+		if (snor_wait_ready(3)) {
+			snor_write_disable();
+			free(write_buf);
+			return -1;
+		}
 
 		snor_dbg("%s: to:%x page_size:%x ret:%x\n", __func__, to, page_size, rc);
 
@@ -911,6 +1028,7 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 				printf("%s: rc:%x page_size:%x\n",
 						__func__, rc, page_size);
 				snor_write_disable();
+				free(write_buf);
 				return retlen - rc;
 			}
 		}
@@ -928,6 +1046,23 @@ int snor_write(unsigned char *buf, unsigned long to, unsigned long len)
 	printf("Written 100%% [%ld] of [%ld] bytes      \n", plen - len, plen);
 	timer_end();
 
+	if (write_timing_active) {
+		write_total_us = now_us() - write_total_us;
+		double wait_other_us = (double)write_wait_us - (double)write_wait_poll_us - (double)write_wait_sleep_us;
+		if (wait_other_us < 0)
+			wait_other_us = 0;
+		printf("Timing: usb/command %.3fs, wait %.3fs (poll %.3fs, sleep %.3fs, other %.3fs), other %.3fs\n",
+		       write_usb_us / 1000000.0,
+		       write_wait_us / 1000000.0,
+		       write_wait_poll_us / 1000000.0,
+		       write_wait_sleep_us / 1000000.0,
+		       wait_other_us / 1000000.0,
+		       (write_total_us - write_usb_us - write_wait_us) / 1000000.0);
+		printf("Timing: pages %lu, bytes %lu\n", write_pages, write_bytes);
+	}
+	write_timing_active = 0;
+
+	free(write_buf);
 	return retlen;
 }
 

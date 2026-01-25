@@ -23,6 +23,7 @@
  */
 #include <string.h>
 #include <stdio.h>
+#include <strings.h>
 #include "ch347_spi.h"
 #include <libusb-1.0/libusb.h>
 #include <stdbool.h>
@@ -54,6 +55,7 @@
 
 #define MODE_1_IFACE 2
 #define MODE_2_IFACE 1
+#define CH347F_IFACE 4  /* CH347F uses interface 4 for SPI */
 
 
 #define	 CH341_PACKET_LENGTH		0x20
@@ -80,6 +82,8 @@ static const struct device_speeds spispeeds[] = {
 	{"468.75",	0x7},
 	{NULL,		0x0}
 };
+static int ch347_spispeed = 0x0;
+static const char *ch347_spispeed_name = "60M";
 bool isCH347F = false;
 #ifdef _WIN32
 #include <windows.h>
@@ -171,6 +175,7 @@ static const struct dev_entry devs_ch347_spi[] = {
  * data bytes to each 32-byte packet with command + 31 bytes of data... */
 static struct libusb_transfer *transfer_out = NULL;
 static struct libusb_transfer *transfer_ins[USB_IN_TRANSFERS] = {0};
+static bool use_async_usb = false;
 
 enum trans_state {TRANS_ACTIVE = -2, TRANS_ERR = -1, TRANS_IDLE = 0};
 
@@ -184,6 +189,7 @@ static void print_hex(const void *buf, size_t len)
 			printf("\n");
 	}
 }
+#endif
 
 
 static void cb_common(const char *func, struct libusb_transfer *transfer)
@@ -339,13 +345,54 @@ err:
 	}
 	return -1;
 }
-#endif
 
 static uint16_t read_le16(const uint8_t *base, size_t offset) {
     // 读取 16 位值（两个字节）并以小端序合并
     uint16_t value = base[offset] | (base[offset + 1] << 8);
 	// printf("value = %d\n",value);
     return value;
+}
+
+int ch347_set_spispeed(const char *speed_str)
+{
+	if (!speed_str)
+		return -1;
+
+	if (!strcasecmp(speed_str, "60M") || !strcasecmp(speed_str, "60")) {
+		ch347_spispeed = 0x0;
+		ch347_spispeed_name = "60M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "30M") || !strcasecmp(speed_str, "30")) {
+		ch347_spispeed = 0x1;
+		ch347_spispeed_name = "30M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "15M") || !strcasecmp(speed_str, "15")) {
+		ch347_spispeed = 0x2;
+		ch347_spispeed_name = "15M";
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "10M") || !strcasecmp(speed_str, "10")) {
+		ch347_spispeed = 0x3;
+		ch347_spispeed_name = "7.5M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "5M") || !strcasecmp(speed_str, "5")) {
+		ch347_spispeed = 0x4;
+		ch347_spispeed_name = "3.75M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+	if (!strcasecmp(speed_str, "2M") || !strcasecmp(speed_str, "2")) {
+		ch347_spispeed = 0x5;
+		ch347_spispeed_name = "1.875M";
+		printf("Requested %s, using nearest supported speed %s.\n", speed_str, ch347_spispeed_name);
+		return 0;
+	}
+
+	return -1;
 }
 
 /*   Set the I2C bus speed (speed(b1b0): 0 = 20kHz; 1 = 100kHz, 2 = 400kHz, 3 = 750kHz).
@@ -391,7 +438,7 @@ int config_stream(unsigned int speed)
 		return -1;
 	}
 	ret = 0;
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	ret = libusb_bulk_transfer(devHandle, WRITE_EP, buff, sizeof(buff), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not configure SPI interface\n");
@@ -432,7 +479,7 @@ static int ch347_cs_control(uint8_t cs1, uint8_t cs2)
 		printf("Could not change CS!\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	int32_t ret = libusb_bulk_transfer(devHandle, WRITE_EP, cmd, sizeof(cmd), NULL, 1000);
 	if (ret < 0) {
 		printf("Could not change CS!\n");
@@ -482,17 +529,25 @@ static int ch347_write(unsigned int writecnt, const uint8_t *writearr)
 		printf("Could not receive write command response\n");
 		return -1;
 	}
-#elif defined(__linux__)
-	unsigned long transferred = packet_len;
-    ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
-	if (ret < 0 || transferred != packet_len) {
-		printf("Could not send write command\n");
-		return -1;
-	}
-	ret = libusb_bulk_transfer(devHandle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
-	if (ret < 0) {
-		printf("Could not receive write command response\n");
-		return -1;
+#elif defined(__linux__) || defined(__APPLE__)
+	if (use_async_usb) {
+		ret = usb_transfer(__func__, packet_len, sizeof(resp_buf), buffer, resp_buf);
+		if (ret < 0) {
+			printf("Could not send write command\n");
+			return -1;
+		}
+	} else {
+		int transferred = packet_len;
+		ret = libusb_bulk_transfer(devHandle, WRITE_EP, buffer, packet_len, &transferred, 1000);
+		if (ret < 0 || transferred != packet_len) {
+			printf("Could not send write command\n");
+			return -1;
+		}
+		ret = libusb_bulk_transfer(devHandle, READ_EP, resp_buf, sizeof(resp_buf), NULL, 1000);
+		if (ret < 0) {
+			printf("Could not receive write command response\n");
+			return -1;
+		}
 	}
 #endif
 		bytes_written += data_len;
@@ -522,8 +577,8 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		printf("Could not send read command\n");
 		return -1;
 	}
-#elif defined(__linux__)
-	unsigned long transferred = sizeof(command_buf);
+#elif defined(__linux__) || defined(__APPLE__)
+	int transferred = sizeof(command_buf);
 	ret = libusb_bulk_transfer(devHandle, WRITE_EP, command_buf, sizeof(command_buf), &transferred, 1000);
 		if (ret < 0 || transferred != sizeof(command_buf)) {
 			printf("Could not send read command\n");
@@ -537,7 +592,7 @@ static int ch347_read(unsigned int readcnt, uint8_t *readarr)
 		printf("Could not read data\n");
 		return -1;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	ret = libusb_bulk_transfer(devHandle, READ_EP, buffer, CH347_PACKET_SIZE, &transferred, 1000);
 	if (ret < 0) {
 		printf("Could not read data\n");
@@ -600,9 +655,22 @@ int ch347_spi_shutdown(void)
     }else{
 	    DevIsOpened = FALSE;
     }
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 if (devHandle == NULL)
 		return -1;
+	if (use_async_usb) {
+		if (transfer_out) {
+			libusb_free_transfer(transfer_out);
+			transfer_out = NULL;
+		}
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i]) {
+				libusb_free_transfer(transfer_ins[i]);
+				transfer_ins[i] = NULL;
+			}
+		}
+		use_async_usb = false;
+	}
     /* TODO: Set this depending on the mode */
 	int spi_interface = MODE_1_IFACE;
 	libusb_release_interface(devHandle, spi_interface);
@@ -618,7 +686,6 @@ int ch347_spi_init(void)
 	int open_res = -1;
     uint16_t vid = CH347_VID;
 	uint16_t pid = devs_ch347_spi[0].device_id;
-	int spispeed = 0x0;    //defaulet 60M SPI
 	int i = 0;
 #ifdef _WIN32
     if (uhModule == 0) {
@@ -674,7 +741,7 @@ int ch347_spi_init(void)
 	}else{
 		isCH347F = false;
 	}
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	int32_t ret = libusb_init(NULL);
 	if (ret < 0) {
 		printf("Could not initialize libusb!\n");
@@ -701,9 +768,16 @@ int ch347_spi_init(void)
 		return -1;
 	}
 
-	/* TODO: set based on mode */
-	/* Mode 1 uses interface 2 for the SPI interface */
-	int spi_interface = MODE_1_IFACE;
+	/* Set isCH347F based on detected PID before claiming interface */
+	if (pid == CH347F_PID) {
+		isCH347F = true;
+	} else {
+		isCH347F = false;
+	}
+
+	/* CH347F uses interface 4, CH347T uses interface 2 */
+	int spi_interface = isCH347F ? CH347F_IFACE : MODE_1_IFACE;
+	printf("Using interface %d for %s\n", spi_interface, isCH347F ? "CH347F" : "CH347T");
 
 	ret = libusb_detach_kernel_driver(devHandle, spi_interface);
 	if (ret != 0 && ret != LIBUSB_ERROR_NOT_FOUND)
@@ -712,7 +786,7 @@ int ch347_spi_init(void)
 
 	ret = libusb_claim_interface(devHandle, spi_interface);
 	if (ret != 0) {
-		printf("Failed to claim interface %d: '%s'\n", MODE_1_IFACE, libusb_error_name(ret));
+		printf("Failed to claim interface %d: '%s'\n", spi_interface, libusb_error_name(ret));
 		goto error_exit;
 	}
 
@@ -728,19 +802,47 @@ int ch347_spi_init(void)
 		printf("Failed to get device descriptor: '%s'\n", libusb_error_name(ret));
 		goto error_exit;
 	}
-	if (pid == CH347F_PID){
-		isCH347F = true;
-	}else{
-		isCH347F = false;
-	}
 	printf("Device revision is %d.%01d.%01d\n",
 		(desc.bcdDevice >> 8) & 0x00FF,
 		(desc.bcdDevice >> 4) & 0x000F,
 		(desc.bcdDevice >> 0) & 0x000F);
+
+	transfer_out = libusb_alloc_transfer(0);
+	if (transfer_out) {
+		libusb_fill_bulk_transfer(transfer_out, devHandle, WRITE_EP, NULL, 0, cb_out, NULL, 1000);
+	}
+	for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+		transfer_ins[i] = libusb_alloc_transfer(0);
+		if (transfer_ins[i]) {
+			libusb_fill_bulk_transfer(transfer_ins[i], devHandle, READ_EP, NULL, 0, cb_in, NULL, 1000);
+		}
+	}
+	use_async_usb = (transfer_out != NULL);
+	if (use_async_usb) {
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i] == NULL) {
+				use_async_usb = false;
+				break;
+			}
+		}
+	}
+	if (!use_async_usb) {
+		if (transfer_out) {
+			libusb_free_transfer(transfer_out);
+			transfer_out = NULL;
+		}
+		for (int i = 0; i < USB_IN_TRANSFERS; i++) {
+			if (transfer_ins[i]) {
+				libusb_free_transfer(transfer_ins[i]);
+				transfer_ins[i] = NULL;
+			}
+		}
+	}
 #endif
 	/* TODO: add programmer cfg for things like CS pin and divisor */
-	if (config_stream(0) < 0)
+	if (config_stream(ch347_spispeed) < 0)
 		goto error_exit;
+	printf("SPI speed set to %s.\n", ch347_spispeed_name);
 	return 0;
 error_exit:
 	ch347_spi_shutdown();
