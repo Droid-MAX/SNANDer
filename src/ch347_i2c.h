@@ -92,7 +92,6 @@ typedef unsigned long(__stdcall * pCH347ReadData)(
 #define	mch347_GET_VER			0x5F    /* Unused on the source */
 
 #define	mch347_EPP_IO_MAX		( mch347_PACKET_LENGTH - 1 )    /* Unused on the source */
-#define	mch347_EPP_IO_MAX		0xFF    /* Unused on the source */
 
 #define	mch347_CMD_IO_ADDR_W		0x00    /* Unused on the source */
 #define	mch347_CMD_IO_ADDR_R		0x80    /* Unused on the source */

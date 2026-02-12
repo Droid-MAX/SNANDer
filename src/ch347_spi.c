@@ -497,6 +497,7 @@ int enable_pins(bool enable)
 	else{
 		ch347_cs_control(CH347_CS_DEASSERT | CH347_CS_CHANGE, CH347_CS_IGNORE);
 	}
+	return 0;
 }
 
 static int ch347_write(unsigned int writecnt, const uint8_t *writearr)

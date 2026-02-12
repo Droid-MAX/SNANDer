@@ -194,7 +194,7 @@ int ch347_i2c_write(struct i2c_msg *msg) {
         *outptr++ = mch347_CMD_I2C_STM_END;
         first = false;
         int ret = 0;
-        unsigned long actuallen = 0;
+        int actuallen = 0;
 #ifdef _WIN32
         actuallen = outptr - i2c_dev.obuf;
         if (!CH347WriteData(ugIndex, i2c_dev.obuf, &actuallen)){
@@ -251,7 +251,7 @@ int ch347_i2c_read(struct i2c_msg *msg)
         *ptr++ = mch347_CMD_I2C_STM_IN;
         *ptr++ = mch347_CMD_I2C_STM_STO;
         *ptr++ = mch347_CMD_I2C_STM_END;
-        unsigned long actuallen = 0;
+        int actuallen = 0;
 #ifdef _WIN32
         actuallen = ptr - i2c_dev.obuf;
         if (!CH347WriteData(ugIndex, i2c_dev.obuf, &actuallen)){
@@ -362,7 +362,7 @@ int ch347delay_ms(unsigned ms) {
     i2c_dev.obuf[0] = mch347_CMD_I2C_STREAM;
     i2c_dev.obuf[1] = mch347_CMD_I2C_STM_MS | (ms & 0xf);        // Wait up to 15ms
     i2c_dev.obuf[2] = mch347_CMD_I2C_STM_END;
-    unsigned long actuallen = 0;
+    int actuallen = 0;
 #ifdef _WIN32
     actuallen = 3;
     if (!CH347WriteData(ugIndex, i2c_dev.obuf, &actuallen) || actuallen != 3){
