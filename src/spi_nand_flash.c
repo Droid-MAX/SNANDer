@@ -153,6 +153,7 @@ static unsigned int spi_nand_poll_delay_us(uint64_t elapsed_us)
 #define _SPI_NAND_MANUFACTURER_ID_FISON			0x6B
 #define _SPI_NAND_MANUFACTURER_ID_TYM			0x19
 #define _SPI_NAND_MANUFACTURER_ID_XINCUN		0x9C
+#define _SPI_NAND_MANUFACTURER_ID_UNIM			0xB0
 
 /* SPI NAND Device ID */
 #define _SPI_NAND_DEVICE_ID_GD5F1GQ4UAYIG	0xF1
@@ -305,6 +306,7 @@ static unsigned int spi_nand_poll_delay_us(uint64_t elapsed_us)
 #define _SPI_NAND_DEVICE_ID_TYM25D2GA02		0x02
 #define _SPI_NAND_DEVICE_ID_TYM25D1GA03		0x03
 #define _SPI_NAND_DEVICE_ID_XCSP1AAWHNT		0x01
+#define _SPI_NAND_DEVICE_ID_UM19C0HISW		0x1C
 
 /* Others Define */
 #define _SPI_NAND_LEN_ONE_BYTE			(1)
@@ -2239,7 +2241,6 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
 		feature:				SPI_NAND_FLASH_FEATURE_NONE,
 	},
-
 	{
 		mfr_id:					_SPI_NAND_MANUFACTURER_ID_XINCUN,
 		dev_id:					_SPI_NAND_DEVICE_ID_XCSP1AAWHNT,
@@ -2251,6 +2252,19 @@ static const struct SPI_NAND_FLASH_INFO_T spi_nand_flash_tables[] = {
 		dummy_mode:				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
 		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_DUAL,
 		write_mode:				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
+		feature:				SPI_NAND_FLASH_FEATURE_NONE,
+	},
+	{
+		mfr_id: 				_SPI_NAND_MANUFACTURER_ID_UNIM,
+		dev_id: 				_SPI_NAND_DEVICE_ID_UM19C0HISW,
+		ptr_name:				"UNIM UM19C0HISW",
+		device_size:				_SPI_NAND_CHIP_SIZE_1GBIT,
+		page_size:				_SPI_NAND_PAGE_SIZE_2KBYTE,
+		oob_size:				_SPI_NAND_OOB_SIZE_64BYTE,
+		erase_size: 				_SPI_NAND_BLOCK_SIZE_128KBYTE,
+		dummy_mode: 				SPI_NAND_FLASH_READ_DUMMY_BYTE_APPEND,
+		read_mode:				SPI_NAND_FLASH_READ_SPEED_MODE_SINGLE,
+		write_mode: 				SPI_NAND_FLASH_WRITE_SPEED_MODE_SINGLE,
 		feature:				SPI_NAND_FLASH_FEATURE_NONE,
 	},
 };
@@ -3393,7 +3407,8 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 	}
 	else if(((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FISON) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_CS11G0T0A0AA)) ||
 		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FISON) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_CS11G1T0A0AA)) ||
-		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FISON) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_CS11G0G0A0AA)))
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_FISON) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_CS11G0G0A0AA)) ||
+		((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_UNIM) && (ptr_dev_info_t->dev_id == _SPI_NAND_DEVICE_ID_UM19C0HISW)))
 	{
 		if(((status & 0x70) >> 4) == 0x7)
 		{
@@ -4424,6 +4439,24 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 		spi_nand_protocol_get_status_reg_1(&feature);
 		_SPI_NAND_DEBUG_PRINTF(SPI_NAND_FLASH_DEBUG_LEVEL_1, "After Unlock all block setup, the status register1 = 0x%x\n", feature);
 	}
+	else if(((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_UNIM) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_UM19C0HISW)))
+	{
+		/* 1. Unlock All block */
+		spi_nand_protocol_get_status_reg_1(&feature);
+		feature &= 0xC7;
+		spi_nand_protocol_set_status_reg_1(feature);
+
+		spi_nand_protocol_get_status_reg_1(&feature);
+		_SPI_NAND_DEBUG_PRINTF(SPI_NAND_FLASH_DEBUG_LEVEL_1, "After Unlock all block setup, the status register1 = 0x%x\n", feature);
+
+		/* 2. Enable Qual mode */
+		spi_nand_protocol_get_status_reg_2(&feature);
+		feature |= 0x1;
+		spi_nand_protocol_set_status_reg_2(feature);
+
+		spi_nand_protocol_get_status_reg_2(&feature);
+		_SPI_NAND_DEBUG_PRINTF(SPI_NAND_FLASH_DEBUG_LEVEL_1, "After enable qual mode setup, the status register2 = 0x%x\n", feature);
+	}
 	else
 	{
 		/* 1. Unlock All block */
@@ -4493,6 +4526,19 @@ static SPI_NAND_FLASH_RTN_T spi_nand_compare( const struct SPI_NAND_FLASH_INFO_T
 	return SPI_NAND_FLASH_RTN_PROBE_ERROR;
 }
 
+static int ext_oob_size( struct SPI_NAND_FLASH_INFO_T *ptr_device_t )
+{
+	if(ECC_fcheck)
+		return 0;
+
+	if(((ptr_device_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_UNIM) && (ptr_device_t->dev_id == _SPI_NAND_DEVICE_ID_UM19C0HISW)))
+	{
+		return 88;
+	}
+
+	return 0;
+}
+
 /*------------------------------------------------------------------------------------
  * FUNCTION: static SPI_NAND_FLASH_RTN_T spi_nand_probe( struct SPI_NAND_FLASH_INFO_T  *ptr_rtn_device_t )
  * PURPOSE : To probe SPI NAND flash id.
@@ -4526,14 +4572,14 @@ static SPI_NAND_FLASH_RTN_T spi_nand_probe( struct SPI_NAND_FLASH_INFO_T *ptr_rt
 	{
 		if ( spi_nand_compare( ptr_rtn_device_t, &spi_nand_flash_tables[i] ) == SPI_NAND_FLASH_RTN_NO_ERROR )
 		{
-			int oob_size = OOB_size ? OOB_size : spi_nand_flash_tables[i].oob_size;
-			ecc_size = ((spi_nand_flash_tables[i].device_size / spi_nand_flash_tables[i].erase_size) * ((spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * spi_nand_flash_tables[i].oob_size));
+			int oob_size = OOB_size ? OOB_size : spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t);
+			ecc_size = ((spi_nand_flash_tables[i].device_size / spi_nand_flash_tables[i].erase_size) * ((spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * (spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t))));
 			ptr_rtn_device_t->device_size = ECC_fcheck ? spi_nand_flash_tables[i].device_size : spi_nand_flash_tables[i].device_size + ecc_size;
-			erase_oob_size                = (spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * spi_nand_flash_tables[i].oob_size;
+			erase_oob_size                = (spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * (spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t));
 			ptr_rtn_device_t->erase_size  = ECC_fcheck ? spi_nand_flash_tables[i].erase_size : spi_nand_flash_tables[i].erase_size + erase_oob_size;
 			ptr_rtn_device_t->page_size   = ECC_fcheck ? spi_nand_flash_tables[i].page_size : spi_nand_flash_tables[i].page_size + oob_size;
 			ptr_rtn_device_t->oob_size    = ECC_fcheck ? oob_size : 0;
-			bmt_oob_size                  = spi_nand_flash_tables[i].oob_size;
+			bmt_oob_size                  = spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t);
 			ptr_rtn_device_t->dummy_mode  = spi_nand_flash_tables[i].dummy_mode;
 			ptr_rtn_device_t->read_mode   = spi_nand_flash_tables[i].read_mode;
 			ptr_rtn_device_t->write_mode  = spi_nand_flash_tables[i].write_mode;
@@ -4590,14 +4636,14 @@ static SPI_NAND_FLASH_RTN_T spi_nand_probe( struct SPI_NAND_FLASH_INFO_T *ptr_rt
 			if ( ( (ptr_rtn_device_t->mfr_id) == spi_nand_flash_tables[i].mfr_id) &&
 			     ( (ptr_rtn_device_t->dev_id) == spi_nand_flash_tables[i].dev_id)  )
 			{
-				int oob_size = OOB_size ? OOB_size : spi_nand_flash_tables[i].oob_size;
-				ecc_size = ((spi_nand_flash_tables[i].device_size / spi_nand_flash_tables[i].erase_size) * ((spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * spi_nand_flash_tables[i].oob_size));
+				int oob_size = OOB_size ? OOB_size : spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t);
+				ecc_size = ((spi_nand_flash_tables[i].device_size / spi_nand_flash_tables[i].erase_size) * ((spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * (spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t))));
 				ptr_rtn_device_t->device_size = ECC_fcheck ? spi_nand_flash_tables[i].device_size : spi_nand_flash_tables[i].device_size + ecc_size;
-				erase_oob_size                = (spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * spi_nand_flash_tables[i].oob_size;
+				erase_oob_size                = (spi_nand_flash_tables[i].erase_size / spi_nand_flash_tables[i].page_size) * (spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t));
 				ptr_rtn_device_t->erase_size  = ECC_fcheck ? spi_nand_flash_tables[i].erase_size : spi_nand_flash_tables[i].erase_size + erase_oob_size;
 				ptr_rtn_device_t->page_size   = ECC_fcheck ? spi_nand_flash_tables[i].page_size : spi_nand_flash_tables[i].page_size + oob_size;
 				ptr_rtn_device_t->oob_size    = ECC_fcheck ? oob_size : 0;
-				bmt_oob_size                  = spi_nand_flash_tables[i].oob_size;
+				bmt_oob_size                  = spi_nand_flash_tables[i].oob_size + ext_oob_size(ptr_rtn_device_t);
 				ptr_rtn_device_t->dummy_mode  = spi_nand_flash_tables[i].dummy_mode;
 				ptr_rtn_device_t->read_mode   = spi_nand_flash_tables[i].read_mode;
 				ptr_rtn_device_t->write_mode  = spi_nand_flash_tables[i].write_mode;
