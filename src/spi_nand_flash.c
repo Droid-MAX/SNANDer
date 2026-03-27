@@ -3274,7 +3274,7 @@ static SPI_NAND_FLASH_RTN_T ecc_fail_check( u32 page_number )
 	else if((ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_HEYANG) ||
 		(ptr_dev_info_t->mfr_id == _SPI_NAND_MANUFACTURER_ID_HEYANG_2))
 	{
-		if(((status & 0x30) >> 4) == 0x2)
+		if(((status & 0x30) >> 4) == 0x3)
 		{
 			rtn_status = SPI_NAND_FLASH_RTN_DETECTED_BAD_BLOCK;
 		}
@@ -4249,7 +4249,7 @@ static void spi_nand_manufacturer_init( struct SPI_NAND_FLASH_INFO_T *ptr_device
 	{
 		/* 1. Unlock All block */
 		spi_nand_protocol_get_status_reg_1(&feature);
-		feature &= 0xC7;
+		feature &= 0x87;
 		spi_nand_protocol_set_status_reg_1(feature);
 
 		/* 2. Enable Qual mode */
